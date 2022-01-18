@@ -189,6 +189,50 @@ class RegisterRoute extends StatefulWidget {
       _firstnameController = TextEditingController();
       _lastnameController = TextEditingController();
     }
+    RegisterUser() async{
+      String username= _usernameController.text;
+      String userpassword= _passwordController.text;
+      String userfirstname= _firstnameController.text;
+      String userlastname = _lastnameController.text;
+      var postresponse = await post(Uri.http('uslsthesisapi.herokuapp.com', '/register'),
+          body: {
+            'username': username,
+            'password': userpassword,
+            'first_name':userfirstname,
+            'last_name': userlastname
+          });
+      var response = json.decode(postresponse.body);
+      if (response == "SameUsername"){
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.deepOrange,
+              content: Container(
+                height: 15,
+                child: Row(
+                  children: [
+                    Text('Another User has the Same Username'),
+                  ],
+                ),
+              ),
+            )
+        );
+      }else{
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.lightGreen,
+              content: Container(
+                height: 15,
+                child: Row(
+                  children: [
+                    Text('User has been created'),
+                  ],
+                ),
+              ),
+            )
+        );
+        Navigator.pop(context);
+      }
+    }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -197,33 +241,6 @@ class RegisterRoute extends StatefulWidget {
       ),
         body: buildRegisterScreen(context)
     );
-  }
-  RegisterUser() async{
-    String username= _usernameController.text;
-    String userpassword= _passwordController.text;
-    String userfirstname= _firstnameController.text;
-    String userlastname = _lastnameController.text;
-    var postresponse = await post(Uri.http('uslsthesisapi.herokuapp.com', '/register'),
-        body: {
-          'username': username,
-          'password': userpassword,
-          'first_name':userfirstname,
-          'last_name': userlastname
-        });
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.lightGreen,
-            content: Container(
-              height: 15,
-              child: Row(
-                children: [
-                  Text('User Successfully Added'),
-                ],
-              ),
-            ),
-          )
-      );
-      Navigator.pop(context);
   }
   @override
   Widget buildRegisterScreen (BuildContext context) {
@@ -321,6 +338,19 @@ class RegisterRoute extends StatefulWidget {
                 ),),
                     onPressed: () {
                         RegisterUser();
+                    }
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: ElevatedButton(child: Text('BACK', style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),),
+                    onPressed: () {
+                      Navigator.pop(context);
                     }
                 ),
               ),
