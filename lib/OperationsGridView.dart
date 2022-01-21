@@ -30,9 +30,27 @@ class _OperationsGridView extends State<OperationsGridView> {
         appBar: AppBar(
           title: Text('Select an Operation'),
         ),
-        body: buildGridview(context));
+        body: buildGridview(context),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const<BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(
+                Icons.home
+            ),
+            label:'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+                Icons.person
+            ),
+            label:'Profile',
+          ),
 
+        ],
+      ),
+    );
   }
+
   AdditionScoreList() async{
     String operation = 'addition';
     Navigator.push(

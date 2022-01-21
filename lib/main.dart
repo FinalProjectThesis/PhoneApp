@@ -1,10 +1,9 @@
+
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'dart:convert';
-import 'package:thesis_mobile_app/EditUser.dart';
 import 'package:thesis_mobile_app/ChildrenList.dart';
-
 void main() {
   runApp(MyApp());
 }
@@ -20,7 +19,9 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Contacts Application with Flutter',
-      home: LoginScreen(),
+      home: Scaffold(
+        body: LoginScreen()
+      )
     );
   }
 }
@@ -92,21 +93,31 @@ class _LoginScreen extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Login'),
-        ),
         body: buildLoginScreen(context));
   }
 
   @override
   Widget buildLoginScreen(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        body: Form(
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Form(
           key: _formKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              Column(
+                children: [
+                  SizedBox(height:20),
+                  Image.asset('assets/images/SampleLogo.png',
+                  height: 200,
+                  width: 300),
+                  SizedBox(height:10),
+                  Text("Login",
+                    style: TextStyle(fontSize: 20)
+                  )
+                ],
+              ),
+              SizedBox(height:10),
               TextFormField(
                   controller: _usernameController,
                   keyboardType: TextInputType.name,
@@ -117,7 +128,6 @@ class _LoginScreen extends State<LoginScreen> {
                       Icons.person_outline_rounded,
                       size: 30,
                     ),
-                    fillColor: Colors.white,
                     filled: true,
                     contentPadding: EdgeInsets.all(15),
                   ),
@@ -163,6 +173,15 @@ class _LoginScreen extends State<LoginScreen> {
                     }),
               ),
               Container(
+                  child: Column(
+                    children: [
+                      Text("------------- or ------------",
+                          style: TextStyle(fontSize: 20)
+                      )
+                    ],
+                  )
+              ),
+              Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: OutlinedButton(
@@ -170,7 +189,7 @@ class _LoginScreen extends State<LoginScreen> {
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0))),
                     ),
                     child: Text(
-                      'REGISTER HERE',
+                      'Sign Up',
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.black,

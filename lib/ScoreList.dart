@@ -1,8 +1,10 @@
 import 'dart:math';
+import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:thesis_mobile_app/ChildrenListAdd.dart';
+import 'package:thesis_mobile_app/ScoreListDetails.dart';
 import 'dart:convert';
 import 'package:thesis_mobile_app/main.dart';
 
@@ -39,7 +41,6 @@ class _ScoreList extends State<ScoreList> {
         });
     var response = json.decode(postresponse.body);
     print("test");
-    print(response);
     if (postresponse.statusCode == 200) {
       var items = json.decode(postresponse.body);
       print("testsuccess");
@@ -49,14 +50,13 @@ class _ScoreList extends State<ScoreList> {
         _buildcontactlist(context);
         _items = items;
       });
-    } else {
+    } else{
       setState(() {
         _items = [];
         print("testfail");
       });
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,6 +70,17 @@ class _ScoreList extends State<ScoreList> {
           : _buildcontactlist(context),
     );
   }
+  /*Widget _buildemptylistmessage(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children:<Widget>[
+          Container(
+            child: Text("Empty, Please Do Tests in This Subject to Recieve Entries")
+          )
+        ]
+      ),
+    );
+  }*/
   Widget _buildcontactlist(BuildContext context) {
     return Scaffold(
       body: Column(
@@ -84,17 +95,18 @@ class _ScoreList extends State<ScoreList> {
                   child: ListTile(
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
+                        children:<Widget>[
+                          Text(_items[index]["rawscore"].toString()+'/'+_items[index]["totalscore"].toString())
+                        ]
                       ),
-                      leading: CircleAvatar(
-                          backgroundColor: Colors.primaries[Random().nextInt(
-                              Colors.primaries.length)],
-                          child: Text(_items[index]['difficulty'])
-                      ),
-                      title: Text(_items[index]['difficulty'].toUpperCase()),
-                      subtitle: Text(
-                            _items[index]["rawscore"].toString() +
-                              '/' +
-                              _items[index]["totalscore"].toString())
+                      title: Text(StringUtils.capitalize("Difficulty: "+_items[index][('difficulty')].toString())),
+                      subtitle: Text("Date: "+_items[index]["date"].toString()),
+                    onTap: (){
+                      {
+                        Navigator.push(context,MaterialPageRoute(builder: (context) => ScoreListDetails(parent_username:widget.parent_username,student_id:_items[index]["student_id"].toString(),student_name:_items[index]["student_name"].toString(), operation:_items[index]["operation"],id:_items[index]["id"].toString()))
+                        );
+                      }
+                    },
                   ),
                 );
               },
