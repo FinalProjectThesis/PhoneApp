@@ -5,20 +5,15 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'dart:convert';
 
-class ScoreListDetails extends StatefulWidget {
+class UserDetails extends StatefulWidget {
   final String parent_username;
   final String student_id;
-  final String student_name;
-  final String operation;
-  final String id;
-  final String index;
-  final String difficulty;
-  ScoreListDetails({Key? key, required this.parent_username, required this.student_id, required this.student_name, required this.operation, required this.id, required this.index, required this.difficulty}) : super(key: key);
-  @override
-  _ScoreListDetails createState() => _ScoreListDetails();
-}
+  UserDetails({Key? key, required this.parent_username, required this.student_id}) : super(key: key);
 
-class _ScoreListDetails extends State<ScoreListDetails> {
+  @override
+  _UserDetails createState() => _UserDetails();
+}
+class _UserDetails extends State<UserDetails> {
   bool refresh = true;
   var items = [];
   var postresponse;
@@ -30,26 +25,26 @@ class _ScoreListDetails extends State<ScoreListDetails> {
   }
 
   fetchUser() async {
-    String index = widget.index;
-    print("index is " + index);
-    String id = widget.id;
+    String username = widget.parent_username;
+    print(username);
     postresponse = await post(
-        Uri.http('uslsthesisapi.herokuapp.com', '/scorelist/' + widget.difficulty),
+        Uri.http('uslsthesisapi.herokuapp.com', '/userdetails'),
         body: {
-          'operation': widget.operation,
-          'student_id':widget.student_id,
+          'username': username
         });
+    var test = json.decode(postresponse);
+    print (test);
     RefreshScreen();
   }
+
   RefreshScreen() async{
     if (postresponse.statusCode == 200) {
       items = json.decode(postresponse.body);
-    setState(() {
-      print (items);
-      refresh = false;
-      _buildcontactlist(context);
-    });
-  } else{
+      setState(() {
+        refresh = false;
+        _buildcontactlist(context);
+      });
+    } else{
       setState(() {
         print("testfail");
       });
@@ -59,7 +54,7 @@ class _ScoreListDetails extends State<ScoreListDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Score Details"),
+        title: Text("User Details"),
       ),
       //if Refresh = false then load circular progress indicator, else load _buildcontactlist widget
       body: refresh ? Center(
@@ -85,22 +80,20 @@ class _ScoreListDetails extends State<ScoreListDetails> {
         verticalDirection: VerticalDirection.down,
         children: [
           SizedBox(height: 30,),
-         Container(
-           child: Text("Student's Name : " + items[int.parse(widget.index)]["student_name"]
-           )
-         ),
           Container(
-            child: Text("Test Taken in : " + items[int.parse(widget.index)]["date"].toString())
+              child: Text("username : " + items[0]["username"]
+              )
           ),
           Container(
-              child: Text("Time  : " + items[int.parse(widget.index)]["time"].toString())
+              child: Text("first_name: " + items[0]["first_name"].toString()
+              )
           ),
           Container(
-            child: Text("Student's Score: " + items[int.parse(widget.index)]["rawscore"].toString() + "/" + items[0]["totalscore"].toString())
+              child: Text("last_name: " + items[0]["last_name"].toString()
+              )
           ),
         ],
       ),
     );
   }
 }
-

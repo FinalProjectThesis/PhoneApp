@@ -197,9 +197,12 @@ class _LoginScreen extends State<LoginScreen> {
                       ),
                     ),
                     onPressed: () {
+
                       RegisterScreenButton();
+
                     }),
               ),
+              SizedBox(height:30)
             ],
           ),
         ),
@@ -268,7 +271,7 @@ class _RegisterRoute extends State<RegisterRoute> {
         ),
       ));
       String parent_username = username;
-      Navigator.push(
+      Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (context) =>
@@ -281,7 +284,7 @@ class _RegisterRoute extends State<RegisterRoute> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Second Route'),
+          title: const Text('Add User to MongoDB'),
         ),
         body: buildRegisterScreen(context));
   }
@@ -381,7 +384,9 @@ class _RegisterRoute extends State<RegisterRoute> {
                       ),
                     ),
                     onPressed: () {
-                      RegisterUser();
+                      if (_formKey.currentState!.validate()){
+                        RegisterUser();
+                      }
                     }),
               ),
               Container(
@@ -454,7 +459,7 @@ class _ChildSetup extends State<ChildSetup> {
           ),
         ),
       );
-      Navigator.push(
+      Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => LoginScreen()))
           .then((value) => setState(() {}));
     } else {
@@ -476,7 +481,7 @@ class _ChildSetup extends State<ChildSetup> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Second Route'),
+          title: const Text('Add Child to Said Parent'),
         ),
         body: buildRegisterScreen(context));
   }

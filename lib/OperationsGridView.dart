@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:thesis_mobile_app/UserDetails.dart';
 import './ScoreList.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -31,23 +32,6 @@ class _OperationsGridView extends State<OperationsGridView> {
           title: Text('Select an Operation'),
         ),
         body: buildGridview(context),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const<BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-                Icons.home
-            ),
-            label:'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-                Icons.person
-            ),
-            label:'Profile',
-          ),
-
-        ],
-      ),
     );
   }
 
@@ -70,6 +54,10 @@ class _OperationsGridView extends State<OperationsGridView> {
     String operation = 'division';
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => ScoreList(parent_username:widget.parent_username, student_id:widget.student_id, student_name:widget.student_name,operation:operation)));
+  }
+  ProfileViewerScreen() async{
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => UserDetails(parent_username:widget.parent_username, student_id:widget.student_id)));
   }
 
   @override
@@ -162,18 +150,36 @@ class _OperationsGridView extends State<OperationsGridView> {
                             ]
                         )
                     ),
-
                     onTap:(){
                       DivisionScoreList();
                     }
                 ),
+                InkWell(
+                  child:Container(
+                    child: Text("Profile"),
+                        color: Colors.white10,
+                  ),
+                    onTap:(){
+                      ProfileViewerScreen();
+                  }
+                ),
+                InkWell(
+                    child:Container(
+                        child: Text("xd"),
+                      color: Colors.pink,
+                    ),
+                    onTap:(){
+                      ProfileViewerScreen();
+                    }
+                )
               ],
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
               ),
 
             )
-        )
+        ),
+
     );
   }
 }

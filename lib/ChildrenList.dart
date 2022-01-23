@@ -86,7 +86,7 @@ class _ChildrenList extends State<ChildrenList> {
                         child: Text(_items[index]['student_name'].substring(0,1).toUpperCase())
                       ),
                       title: Text(_items[index]['student_name']),
-                      subtitle: Text("Student Age: " + _items[index]["id"].toString()),
+                      subtitle: Text("Student Age: " + _items[index]["student_age"].toString()),
                   onTap:(){
                     Navigator.push(context,MaterialPageRoute(builder: (context) => OperationsGridView(parent_username:widget.parent_username,student_id:_items[index]["id"].toString(),student_name:_items[index]["student_name"].toString()))).then((value) => setState(() {
                       fetchUser();
@@ -96,7 +96,18 @@ class _ChildrenList extends State<ChildrenList> {
                 );
               },
             ),
-          ) :Container(),
+          ) :Container(
+            width: double.infinity,
+            height: 300,
+            alignment: Alignment.center,
+            child: Container(
+                width: 200,
+                height: 200,
+                child: Text(
+                  "Add a Child",
+                  textAlign: TextAlign.center,)
+            ),
+          ),
           Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 10),
