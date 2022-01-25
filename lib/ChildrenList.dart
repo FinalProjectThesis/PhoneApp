@@ -19,6 +19,7 @@ class _ChildrenList extends State<ChildrenList> {
   bool refresh = true;
   List _items = [];
 
+
   @override
   void initState() {
     // TODO: implement initState
@@ -52,6 +53,13 @@ class _ChildrenList extends State<ChildrenList> {
     }
   }
 
+
+  DeleteChild() async{
+    /*var deleteresponse = await delete(Uri.http('uslsthesisapi.herokuapp.com','/childlist/delete' +  id),
+    fetchUser();*/
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +86,17 @@ class _ChildrenList extends State<ChildrenList> {
                   margin: EdgeInsets.all(10),
                   child: ListTile(
                       trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
+                          mainAxisSize: MainAxisSize.min,
+                          children:<Widget>[
+                             IconButton(
+                              icon:Icon(Icons.restore_from_trash_outlined),
+                               onPressed:(){
+                                 Navigator.push(context,MaterialPageRoute(builder: (context) => OperationsGridView(parent_username:widget.parent_username,student_id:_items[index]["id"].toString(),student_name:_items[index]["student_name"].toString()))).then((value) => setState(() {
+                                   fetchUser();
+                                 }));
+                               }
+                            ),
+                          ],
                       ),
                       leading: CircleAvatar(
                         backgroundColor: Colors.primaries[Random().nextInt(
@@ -159,5 +177,8 @@ class _ChildrenList extends State<ChildrenList> {
     );
   }
 }
+
+
+
 
 

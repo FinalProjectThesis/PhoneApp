@@ -46,12 +46,8 @@ class _ScoreList extends State<ScoreList> {
        print("test");
        if (postresponse.statusCode == 200) {
          var items = json.decode(postresponse.body);
-
          print("testsuccess");
          print(items);
-         if (items.length==0){
-           print ("empty");
-         }else
            setState(() {
            refresh = false;
            _buildScoreList(context);
@@ -128,10 +124,10 @@ class _ScoreList extends State<ScoreList> {
             ),
           ),
           SizedBox(height:20),
-          Align(
+          /*Align(
                   child: Text("Difficulty: "),
               alignment: Alignment(0.75,-0.90),
-    ),
+    )*/
               Align(
                 alignment: Alignment(0.90,-0.80),
                   child: DropdownButton(
@@ -140,7 +136,7 @@ class _ScoreList extends State<ScoreList> {
                     items:items.map((String items) {
                       return DropdownMenuItem(
                           value: items,
-                          child: Text(items)
+                          child: Text(items),
                       );
                     }
                     ).toList(),
@@ -150,6 +146,13 @@ class _ScoreList extends State<ScoreList> {
                             postItems();
                       });
                     },
+                    /*hint: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        "Select Difficulty",
+                        style: TextStyle(color:Colors.grey),
+                      )
+                    )*/
                   ),
               ),
           _items.length > 0
