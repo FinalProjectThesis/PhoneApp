@@ -7,6 +7,7 @@ import 'package:thesis_mobile_app/OperationsGridView.dart';
 import 'dart:convert';
 import 'package:thesis_mobile_app/ScoreList.dart';
 import 'package:thesis_mobile_app/main.dart';
+import 'package:thesis_mobile_app/EditUser.dart';
 
 
 class ChildrenList extends StatefulWidget {
@@ -89,9 +90,9 @@ class _ChildrenList extends State<ChildrenList> {
                           mainAxisSize: MainAxisSize.min,
                           children:<Widget>[
                              IconButton(
-                              icon:Icon(Icons.restore_from_trash_outlined),
+                              icon:Icon(Icons.person),
                                onPressed:(){
-                                 Navigator.push(context,MaterialPageRoute(builder: (context) => OperationsGridView(parent_username:widget.parent_username,student_id:_items[index]["id"].toString(),student_name:_items[index]["student_name"].toString()))).then((value) => setState(() {
+                                 Navigator.push(context,MaterialPageRoute(builder: (context) => EditChild(parent_username:widget.parent_username,student_id:_items[index]["id"].toString(),student_name:_items[index]["student_name"].toString(), student_age: _items[index]["student_age"].toString(),))).then((value) => setState(() {
                                    fetchUser();
                                  }));
                                }
@@ -106,7 +107,7 @@ class _ChildrenList extends State<ChildrenList> {
                       title: Text(_items[index]['student_name']),
                       subtitle: Text("Student Age: " + _items[index]["student_age"].toString()),
                   onTap:(){
-                    Navigator.push(context,MaterialPageRoute(builder: (context) => OperationsGridView(parent_username:widget.parent_username,student_id:_items[index]["id"].toString(),student_name:_items[index]["student_name"].toString()))).then((value) => setState(() {
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => OperationsGridView(parent_username:widget.parent_username,student_id:_items[index]["id"].toString(),student_name:_items[index]["student_name"].toString(),student_age:_items[index]["student_age"].toString()))).then((value) => setState(() {
                       fetchUser();
                     }));
                     }
@@ -122,7 +123,7 @@ class _ChildrenList extends State<ChildrenList> {
                 width: 200,
                 height: 200,
                 child: Text(
-                  "Add a Child",
+                  "Please Add a Child! ",
                   textAlign: TextAlign.center,)
             ),
           ),

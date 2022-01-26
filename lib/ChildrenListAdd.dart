@@ -48,9 +48,13 @@ class _ChildrenListAdd extends State<ChildrenListAdd> {
           ),
         ),
       );
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => ChildrenList(parent_username: widget.parent_username,)))
-          .then((value) => setState(() {}));
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => ChildrenList(parent_username: widget.parent_username),
+        ),
+            (route) => false,
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.lightGreen,

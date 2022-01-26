@@ -1,5 +1,6 @@
 
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
@@ -64,12 +65,19 @@ class _LoginScreen extends State<LoginScreen> {
         ),
       ));
       String parent_username = username;
-      Navigator.pushReplacement(
+      /*Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (context) =>
                       ChildrenList(parent_username: parent_username)))
-          .then((value) => setState(() {}));
+          .then((value) => setState(() {}));*/
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => ChildrenList(parent_username: parent_username),
+        ),
+            (route) => false,
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.deepOrange,
@@ -279,7 +287,6 @@ class _RegisterRoute extends State<RegisterRoute> {
           .then((value) => setState(() {}));
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -324,7 +331,7 @@ class _RegisterRoute extends State<RegisterRoute> {
                     decoration: InputDecoration(
                       labelText: 'Enter the Password',
                       prefixIcon: Icon(
-                        Icons.phone,
+                        CupertinoIcons.divide,
                         size: 30,
                       ),
                       fillColor: Colors.white,
@@ -403,7 +410,12 @@ class _RegisterRoute extends State<RegisterRoute> {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    LoginScreen()))
+                            .then((value) => setState(() {}));
                       }),
                 ),
               ],
@@ -461,9 +473,13 @@ class _ChildSetup extends State<ChildSetup> {
           ),
         ),
       );
-      Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => LoginScreen()))
-          .then((value) => setState(() {}));
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => ChildrenList(parent_username: widget.parent_username,),
+        ),
+            (route) => false,
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.lightGreen,
@@ -478,7 +494,6 @@ class _ChildSetup extends State<ChildSetup> {
       ));
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -487,7 +502,6 @@ class _ChildSetup extends State<ChildSetup> {
         ),
         body: buildRegisterScreen(context));
   }
-
   @override
   Widget buildRegisterScreen(BuildContext context) {
     return Container(
@@ -515,7 +529,8 @@ class _ChildSetup extends State<ChildSetup> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter Your Username';
                     }
-                  }),
+                  }
+                  ),
               TextFormField(
                   controller: _childageController,
                   keyboardType: TextInputType.number,

@@ -15,7 +15,8 @@ class OperationsGridView extends StatefulWidget {
   final String parent_username;
   final String student_id;
   final String student_name;
-  OperationsGridView({Key? key, required this.parent_username, required this.student_id, required this.student_name}) : super(key: key);
+  final String student_age;
+  OperationsGridView({Key? key, required this.parent_username, required this.student_id, required this.student_name, required this.student_age}) : super(key: key);
   @override
   _OperationsGridView createState() => _OperationsGridView();
 }
