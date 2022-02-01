@@ -32,15 +32,15 @@ class _UserDetails extends State<UserDetails> {
         body: {
           'username': username
         });
-    var test = json.decode(postresponse);
-    print (test);
     RefreshScreen();
   }
 
   RefreshScreen() async{
     if (postresponse.statusCode == 200) {
       items = json.decode(postresponse.body);
+      var itemChart = json.decode(postresponse.body);
       setState(() {
+        print (items);
         refresh = false;
         _buildcontactlist(context);
       });
@@ -50,11 +50,12 @@ class _UserDetails extends State<UserDetails> {
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("User Details"),
+        title: Text("Your Account Details"),
       ),
       //if Refresh = false then load circular progress indicator, else load _buildcontactlist widget
       body: refresh ? Center(
@@ -76,24 +77,24 @@ class _UserDetails extends State<UserDetails> {
   }*/
   Widget _buildcontactlist(BuildContext context) {
     return Scaffold(
-      body: Column(
-        verticalDirection: VerticalDirection.down,
-        children: [
-          SizedBox(height: 30,),
-          Container(
-              child: Text("username : " + items[0]["username"]
-              )
-          ),
-          Container(
-              child: Text("first_name: " + items[0]["first_name"].toString()
-              )
-          ),
-          Container(
-              child: Text("last_name: " + items[0]["last_name"].toString()
-              )
-          ),
-        ],
-      ),
+        body: Column(
+          verticalDirection: VerticalDirection.down,
+          children: [
+            SizedBox(height: 30,),
+            Container(
+                child: Text("Your Username : " + items[0]["username"]
+                )
+            ),
+            Container(
+                child: Text("Your First Name : " + items[0]["first_name"].toString()
+                )
+            ),
+            Container(
+                child: Text("Your Last Name : " + items[0]["last_name"].toString()
+                )
+            ),
+          ],
+        )
     );
   }
 }

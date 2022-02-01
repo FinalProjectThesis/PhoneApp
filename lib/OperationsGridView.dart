@@ -65,7 +65,9 @@ class _OperationsGridView extends State<OperationsGridView> {
   Widget buildGridview(BuildContext context) {
     return Scaffold(
         body: Container(
-            child: GridView(
+            child: GridView.count(
+              padding: EdgeInsets.zero,
+              crossAxisCount: 2,
               children: [
                 InkWell(
                     child:Container(
@@ -171,14 +173,10 @@ class _OperationsGridView extends State<OperationsGridView> {
                     ),
                     onTap:(){
                       ProfileViewerScreen();
-                    }
-                )
-              ],
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+                      }
+                  )
+                ],
               ),
-
-            )
         ),
 
     );

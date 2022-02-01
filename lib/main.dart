@@ -35,6 +35,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreen extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>(); // For Storing Form state
   late TextEditingController _passwordController, _usernameController;
+  bool isLoading=true;
+  bool _showPassword = false;
 
   @override
   void initState() {
@@ -117,51 +119,75 @@ class _LoginScreen extends State<LoginScreen> {
                 children: [
                   SizedBox(height:20),
                   Image.asset('assets/images/SampleLogo.png',
-                  height: 200,
+                  height: 170,
                   width: 300),
                   SizedBox(height:10),
-                  Text("Login",
-                    style: TextStyle(fontSize: 20)
-                  )
                 ],
               ),
               SizedBox(height:10),
-              TextFormField(
-                  controller: _usernameController,
-                  keyboardType: TextInputType.name,
-                  textCapitalization: TextCapitalization.words,
-                  decoration: InputDecoration(
-                    labelText: 'Enter your Username',
-                    prefixIcon: Icon(
-                      Icons.person_outline_rounded,
-                      size: 30,
-                    ),
-                    filled: true,
-                    contentPadding: EdgeInsets.all(15),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter Your Username';
-                    }
-                  }),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 10,
+                    )
+                ),
+                child: Column(
+                children: [
+                      Container(
+                          child: Text("Login",
+                              style: TextStyle(fontSize: 20)
+                          )
+                      ),
+                      SizedBox(height:5),
+                      TextFormField(
+                      controller: _usernameController,
+                      keyboardType: TextInputType.name,
+                      textCapitalization: TextCapitalization.words,
+                      decoration: InputDecoration(
+                        labelText: 'Enter your Username',
+                        prefixIcon: Icon(
+                          Icons.person_outline_rounded,
+                          size: 30,
+                        ),
+                        filled: true,
+                        contentPadding: EdgeInsets.all(15),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter Your Username';
+                        }
+                      }),
               TextFormField(
                   controller: _passwordController,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    labelText: 'Enter the Password',
+                    labelText: 'Enter Your Password',
                     prefixIcon: Icon(
-                      Icons.phone,
+                      Icons.tag,
                       size: 30,
                     ),
-                    fillColor: Colors.white,
-                    filled: true,
+                    suffixIcon: GestureDetector(
+                      onTap: (){
+                        setState(() {
+                          _showPassword = !_showPassword;
+                        });
+                      },
+                      child: Icon(
+                        _showPassword ? Icons.visibility : Icons.visibility_off,
+                      ),
+                    ),
                     contentPadding: EdgeInsets.all(15),
                   ),
+                  obscureText: !_showPassword,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter Your Password';
                     }
-                  }),
+                  }
+                  ),
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 10),
@@ -177,8 +203,9 @@ class _LoginScreen extends State<LoginScreen> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         ConfirmLogin();
-                      }
-                    }),
+                      }/**/
+                    }
+                    ),
               ),
               Container(
                   child: Column(
@@ -205,14 +232,16 @@ class _LoginScreen extends State<LoginScreen> {
                       ),
                     ),
                     onPressed: () {
-
                       RegisterScreenButton();
-
-                    }),
+                      },
+                    ),
               ),
               SizedBox(height:30)
             ],
           ),
+              ),
+            ],
+      ),
         ),
       ),
     );
@@ -331,7 +360,7 @@ class _RegisterRoute extends State<RegisterRoute> {
                     decoration: InputDecoration(
                       labelText: 'Enter the Password',
                       prefixIcon: Icon(
-                        CupertinoIcons.divide,
+                        Icons.tag,
                         size: 30,
                       ),
                       fillColor: Colors.white,
@@ -348,10 +377,6 @@ class _RegisterRoute extends State<RegisterRoute> {
                     keyboardType: TextInputType.name,
                     decoration: InputDecoration(
                       labelText: 'Enter your First Name ',
-                      prefixIcon: Icon(
-                        Icons.phone,
-                        size: 30,
-                      ),
                       fillColor: Colors.white,
                       filled: true,
                       contentPadding: EdgeInsets.all(15),
@@ -359,17 +384,14 @@ class _RegisterRoute extends State<RegisterRoute> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please Enter your First Name';
+                        }
                       }
-                    }),
+                    ),
                 TextFormField(
                     controller: _lastnameController,
                     keyboardType: TextInputType.name,
                     decoration: InputDecoration(
                       labelText: 'Enter your Last Name',
-                      prefixIcon: Icon(
-                        Icons.phone,
-                        size: 30,
-                      ),
                       fillColor: Colors.white,
                       filled: true,
                       contentPadding: EdgeInsets.all(15),

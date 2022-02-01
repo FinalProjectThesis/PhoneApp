@@ -31,22 +31,7 @@ class _EditChild extends State<EditChild> {
   EditChild() async {
     String studentname = _childnameController.text;
     String studentage = _childageController.text;
-    var postresponse =
-    await put(Uri.http(
-        'uslsthesisapi.herokuapp.com', '/childedit/update' + widget.student_id),
-        body: {
-          "student_name": studentname,
-          "student_age": studentage,
-        });
-    if (postresponse.statusCode == 200) {
-      print("testsuccess");
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => ChildrenList(parent_username: widget.parent_username),
-        ),
-            (route) => false,
-      );
+    if (studentname == widget.student_name){
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.deepOrange,
@@ -54,27 +39,58 @@ class _EditChild extends State<EditChild> {
               height: 15,
               child: Row(
                 children: [
-                  Text('Student ' + widget.student_name + ' Modified'),
+                  Text("Please Enter a different name"),
                 ],
               ),
             ),
           )
       );
     }else{
-      print(postresponse.body);
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.deepOrange,
-            content: Container(
-              height: 15,
-              child: Row(
-                children: [
-                  Text("Error in Modifying child"),
-                ],
+      var postresponse =
+      await put(Uri.http(
+          'uslsthesisapi.herokuapp.com', '/childedit/update/' + widget.student_id),
+          body: {
+            "student_name": studentname,
+            "student_age": studentage,
+          });
+      if (postresponse.statusCode == 200) {
+        print("testsuccess");
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => ChildrenList(parent_username: widget.parent_username),
+          ),
+              (route) => false,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.deepOrange,
+              content: Container(
+                height: 15,
+                child: Row(
+                  children: [
+                    Text('Student ' + widget.student_name + ' Modified'),
+                  ],
+                ),
               ),
-            ),
-          )
-      );
+            )
+        );
+      }else{
+        print(postresponse.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.deepOrange,
+              content: Container(
+                height: 15,
+                child: Row(
+                  children: [
+                    Text("Error in Modifying child"),
+                  ],
+                ),
+              ),
+            )
+        );
+      }
     }
   }
   showConfirmDeleteDialog(BuildContext context)  {
@@ -168,27 +184,8 @@ class _EditChild extends State<EditChild> {
               TextFormField(
                   controller: _childnameController,
                   keyboardType: TextInputType.name,
-                  textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
-                    labelText: 'Enter the Childs Name',
-                    prefixIcon: Icon(
-                      Icons.person_outline_rounded,
-                      size: 30,
-                    ),
-                    fillColor: Colors.white,
-                    filled: true,
-                    contentPadding: EdgeInsets.all(15),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please Enter your child's name";
-                    }
-                  }),
-              TextFormField(
-                  controller: _childageController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: "Enter the Childs Age",
+                    labelText: 'Enter your First Name ',
                     prefixIcon: Icon(
                       Icons.phone,
                       size: 30,
@@ -199,7 +196,26 @@ class _EditChild extends State<EditChild> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Please enter Your child's name";
+                      return "Please Enter Your Child's name";
+                    }
+                  }
+              ),
+              TextFormField(
+                  controller: _childageController,
+                  keyboardType: TextInputType.name,
+                  decoration: InputDecoration(
+                    labelText: 'Enter your Last Name',
+                    prefixIcon: Icon(
+                      Icons.phone,
+                      size: 30,
+                    ),
+                    fillColor: Colors.white,
+                    filled: true,
+                    contentPadding: EdgeInsets.all(15),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please Enter your Child's last name";
                     }
                   }),
               Container(
@@ -215,7 +231,9 @@ class _EditChild extends State<EditChild> {
                       ),
                     ),
                     onPressed: () {
-                      EditChild();
+                      if(_formKey.currentState!.validate()){
+                        EditChild();
+                      }
                     }),
               ),
             ],
