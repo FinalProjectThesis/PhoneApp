@@ -13,7 +13,8 @@ class EditChild extends StatefulWidget {
   final String student_name;
   final String student_age;
   final String student_id;
-  EditChild({Key? key, required this.student_id, required this.parent_username, required this.student_name, required this.student_age,}) : super(key: key);
+  final String token;
+  EditChild({Key? key, required this.student_id, required this.parent_username, required this.student_name, required this.student_age, required this.token,}) : super(key: key);
   @override
   _EditChild createState() => _EditChild();
 }
@@ -52,13 +53,17 @@ class _EditChild extends State<EditChild> {
           body: {
             "student_name": studentname,
             "student_age": studentage,
-          });
+          },
+          headers: {
+            "token": widget.token
+          }
+      );
       if (postresponse.statusCode == 200) {
         print("testsuccess");
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) => ChildrenList(parent_username: widget.parent_username),
+            builder: (BuildContext context) => ChildrenList(parent_username: widget.parent_username, token: widget.token,),
           ),
               (route) => false,
         );
@@ -108,6 +113,9 @@ class _EditChild extends State<EditChild> {
         delete(Uri.http(
             'uslsthesisapi.herokuapp.com',
             '/childedit/delete/' + widget.student_id),
+          headers: {
+            "token":widget.token
+          },
         );
       }
         );

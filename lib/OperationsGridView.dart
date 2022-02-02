@@ -16,7 +16,8 @@ class OperationsGridView extends StatefulWidget {
   final String student_id;
   final String student_name;
   final String student_age;
-  OperationsGridView({Key? key, required this.parent_username, required this.student_id, required this.student_name, required this.student_age}) : super(key: key);
+  final String token;
+  OperationsGridView({Key? key, required this.parent_username, required this.student_id, required this.student_name, required this.student_age, required this.token}) : super(key: key);
   @override
   _OperationsGridView createState() => _OperationsGridView();
 }
@@ -39,26 +40,26 @@ class _OperationsGridView extends State<OperationsGridView> {
   AdditionScoreList() async{
     String operation = 'addition';
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ScoreList(parent_username:widget.parent_username, student_id:widget.student_id, student_name:widget.student_name,operation:operation)));
+        context, MaterialPageRoute(builder: (context) => ScoreList(parent_username:widget.parent_username, student_id:widget.student_id, student_name:widget.student_name,operation:operation, token: widget.token,)));
   }
   SubtractionScoreList() async{
     String operation = 'subtraction';
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ScoreList(parent_username:widget.parent_username, student_id:widget.student_id, student_name:widget.student_name,operation:operation)));
+        context, MaterialPageRoute(builder: (context) => ScoreList(parent_username:widget.parent_username, student_id:widget.student_id, student_name:widget.student_name,operation:operation, token: widget.token)));
   }
   MultiplicationScoreList() async{
     String operation = 'multiplication';
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ScoreList(parent_username:widget.parent_username, student_id:widget.student_id, student_name:widget.student_name,operation:operation)));
+        context, MaterialPageRoute(builder: (context) => ScoreList(parent_username:widget.parent_username, student_id:widget.student_id, student_name:widget.student_name,operation:operation, token: widget.token)));
   }
   DivisionScoreList() async{
     String operation = 'division';
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ScoreList(parent_username:widget.parent_username, student_id:widget.student_id, student_name:widget.student_name,operation:operation)));
+        context, MaterialPageRoute(builder: (context) => ScoreList(parent_username:widget.parent_username, student_id:widget.student_id, student_name:widget.student_name,operation:operation, token: widget.token)));
   }
   ProfileViewerScreen() async{
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => UserDetails(parent_username:widget.parent_username, student_id:widget.student_id)));
+        context, MaterialPageRoute(builder: (context) => UserDetails(parent_username:widget.parent_username, student_id:widget.student_id, token: widget.token)));
   }
 
   @override

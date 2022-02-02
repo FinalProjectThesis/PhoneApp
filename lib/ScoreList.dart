@@ -14,7 +14,8 @@ class ScoreList extends StatefulWidget {
   final String student_id;
   final String student_name;
   final String operation;
-  ScoreList({Key? key, required this.parent_username, required this.student_id, required this.student_name, required this.operation}) : super(key: key);
+  final String token;
+  ScoreList({Key? key, required this.parent_username, required this.student_id, required this.student_name, required this.operation, required this.token}) : super(key: key);
   @override
   _ScoreList createState() => _ScoreList();
 }
@@ -42,7 +43,10 @@ class _ScoreList extends State<ScoreList> {
            body: {
              'operation': operation,
              'student_id': student_id
-           });
+           },
+           headers: {
+             "token":widget.token
+       });
        print("test");
        if (postresponse.statusCode == 200) {
          var items = json.decode(postresponse.body);
@@ -173,7 +177,7 @@ class _ScoreList extends State<ScoreList> {
                       subtitle: Text("Date: "+_items[index]["date"].toString()),
                     onTap: (){
                       {
-                        Navigator.push(context,MaterialPageRoute(builder: (context) => ScoreListDetails(parent_username:widget.parent_username,student_id:_items[index]["student_id"].toString(),student_name:_items[index]["student_name"].toString(), operation:_items[index]["operation"],id:_items[index]["id"].toString(),index: index.toString(),difficulty: _items[index]["difficulty"]))
+                        Navigator.push(context,MaterialPageRoute(builder: (context) => ScoreListDetails(parent_username:widget.parent_username,student_id:_items[index]["student_id"].toString(),student_name:_items[index]["student_name"].toString(), operation:_items[index]["operation"],id:_items[index]["id"].toString(),index: index.toString(),difficulty: _items[index]["difficulty"], token: widget.token,))
                         );
                       }
                     },
@@ -190,7 +194,7 @@ class _ScoreList extends State<ScoreList> {
               width: 200,
               height: 200,
               child: Text(
-                  "Please Take a Test with this difficulty and operation to add into this list!",
+                  "Empty!, Please Take a Test with this difficulty and operation to add into this list!",
               textAlign: TextAlign.center,)
             ),
           )

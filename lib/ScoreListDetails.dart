@@ -16,7 +16,8 @@ class ScoreListDetails extends StatefulWidget {
   final String id;
   final String index;
   final String difficulty;
-  ScoreListDetails({Key? key, required this.parent_username, required this.student_id, required this.student_name, required this.operation, required this.id, required this.index, required this.difficulty}) : super(key: key);
+  final String token;
+  ScoreListDetails({Key? key, required this.parent_username, required this.student_id, required this.student_name, required this.operation, required this.id, required this.index, required this.difficulty, required this.token}) : super(key: key);
   @override
   _ScoreListDetails createState() => _ScoreListDetails();
 }
@@ -44,7 +45,11 @@ class _ScoreListDetails extends State<ScoreListDetails> {
         body: {
           'operation': widget.operation,
           'student_id':widget.student_id,
-        });
+        },
+      headers: {
+          "token": widget.token
+      }
+        );
     RefreshScreen();
   }
   RefreshScreen() async{

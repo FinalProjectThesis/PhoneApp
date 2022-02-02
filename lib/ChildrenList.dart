@@ -12,7 +12,8 @@ import 'package:thesis_mobile_app/EditUser.dart';
 
 class ChildrenList extends StatefulWidget {
   final String parent_username;
-  ChildrenList({Key? key, required this.parent_username}) : super(key: key);
+  final String token;
+  ChildrenList({Key? key, required this.parent_username, required this.token}) : super(key: key);
   @override
   _ChildrenList createState() => _ChildrenList();
 }
@@ -27,13 +28,16 @@ class _ChildrenList extends State<ChildrenList> {
     super.initState();
     this.fetchUser();
   }
-
   fetchUser() async {
     String parent_username= widget.parent_username;
     var postresponse = await post(Uri.http('uslsthesisapi.herokuapp.com', '/childlist'),
         body: {
           'parent_username':parent_username
-        });
+        },
+      headers: {
+          'token': widget.token
+        }
+        );
     var response = json.decode(postresponse.body);
     print("test");
     print(response);
@@ -92,7 +96,7 @@ class _ChildrenList extends State<ChildrenList> {
                              IconButton(
                               icon:Icon(Icons.person),
                                onPressed:(){
-                                 Navigator.push(context,MaterialPageRoute(builder: (context) => EditChild(parent_username:widget.parent_username,student_id:_items[index]["id"].toString(),student_name:_items[index]["student_name"].toString(), student_age: _items[index]["student_age"].toString(),))).then((value) => setState(() {
+                                 Navigator.push(context,MaterialPageRoute(builder: (context) => EditChild(parent_username:widget.parent_username,student_id:_items[index]["id"].toString(),student_name:_items[index]["student_name"].toString(), student_age: _items[index]["student_age"].toString(),token : widget.token))).then((value) => setState(() {
                                    fetchUser();
                                  }));
                                }
@@ -107,7 +111,7 @@ class _ChildrenList extends State<ChildrenList> {
                       title: Text(_items[index]['student_name']),
                       subtitle: Text("Student Age: " + _items[index]["student_age"].toString()),
                   onTap:(){
-                    Navigator.push(context,MaterialPageRoute(builder: (context) => OperationsGridView(parent_username:widget.parent_username,student_id:_items[index]["id"].toString(),student_name:_items[index]["student_name"].toString(),student_age:_items[index]["student_age"].toString()))).then((value) => setState(() {
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => OperationsGridView(parent_username:widget.parent_username,student_id:_items[index]["id"].toString(),student_name:_items[index]["student_name"].toString(),student_age:_items[index]["student_age"].toString(),token: widget.token, ))).then((value) => setState(() {
                       fetchUser();
                     }));
                     }
@@ -143,7 +147,7 @@ class _ChildrenList extends State<ChildrenList> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (context) => ChildrenListAdd(parent_username:widget.parent_username,))).then((value) => setState(() {
+                  Navigator.push(context,MaterialPageRoute(builder: (context) => ChildrenListAdd(parent_username:widget.parent_username, token: widget.token))).then((value) => setState(() {
                     fetchUser();
                   }));
                 }),

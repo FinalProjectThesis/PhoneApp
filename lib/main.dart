@@ -53,8 +53,19 @@ class _LoginScreen extends State<LoginScreen> {
         Uri.http('uslsthesisapi.herokuapp.com', '/login'),
         body: {'username': username, 'password': userpassword});
     var response = json.decode(postresponse.body);
-    print(response);
-    if (response == "Succeeded") {
+    if (response == "Failed") {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.deepOrange,
+        content: Container(
+          height: 15,
+          child: Row(
+            children: [
+              Text('Wrong Username or Password'),
+            ],
+          ),
+        ),
+      ));
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.lightGreen,
         content: Container(
@@ -76,22 +87,10 @@ class _LoginScreen extends State<LoginScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => ChildrenList(parent_username: parent_username),
+          builder: (BuildContext context) => ChildrenList(parent_username: parent_username, token: response),
         ),
             (route) => false,
       );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.deepOrange,
-        content: Container(
-          height: 15,
-          child: Row(
-            children: [
-              Text('Wrong Username or Password'),
-            ],
-          ),
-        ),
-      ));
     }
   }
 
@@ -498,7 +497,7 @@ class _ChildSetup extends State<ChildSetup> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => ChildrenList(parent_username: widget.parent_username,),
+          builder: (BuildContext context) => LoginScreen(),
         ),
             (route) => false,
       );

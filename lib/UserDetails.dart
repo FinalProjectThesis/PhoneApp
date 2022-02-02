@@ -8,7 +8,8 @@ import 'dart:convert';
 class UserDetails extends StatefulWidget {
   final String parent_username;
   final String student_id;
-  UserDetails({Key? key, required this.parent_username, required this.student_id}) : super(key: key);
+  final String token;
+  UserDetails({Key? key, required this.parent_username, required this.student_id, required this.token}) : super(key: key);
 
   @override
   _UserDetails createState() => _UserDetails();
@@ -31,7 +32,10 @@ class _UserDetails extends State<UserDetails> {
         Uri.http('uslsthesisapi.herokuapp.com', '/userdetails'),
         body: {
           'username': username
-        });
+        },
+        headers: {
+          "token": widget.token
+    });
     RefreshScreen();
   }
 
@@ -86,6 +90,7 @@ class _UserDetails extends State<UserDetails> {
                 )
             ),
             Container(
+
                 child: Text("Your First Name : " + items[0]["first_name"].toString()
                 )
             ),

@@ -9,7 +9,8 @@ import 'package:thesis_mobile_app/main.dart';
 
 class ChildrenListAdd extends StatefulWidget {
   final String parent_username;
-  ChildrenListAdd({Key? key, required this.parent_username}) : super(key: key);
+  final String token;
+  ChildrenListAdd({Key? key, required this.parent_username, required this.token}) : super(key: key);
   @override
   _ChildrenListAdd createState() => _ChildrenListAdd();
 }
@@ -32,7 +33,11 @@ class _ChildrenListAdd extends State<ChildrenListAdd> {
       "student_name": studentname,
       "student_age": studentage,
       "parent_username": widget.parent_username
-    });
+    },
+      headers: {
+       "token": widget.token
+        }
+    );
     var response = json.decode(postresponse.body);
     if (response == "Success") {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -51,7 +56,7 @@ class _ChildrenListAdd extends State<ChildrenListAdd> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => ChildrenList(parent_username: widget.parent_username),
+          builder: (BuildContext context) => ChildrenList(parent_username: widget.parent_username, token: widget.token,),
         ),
             (route) => false,
       );
