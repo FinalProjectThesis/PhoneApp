@@ -124,120 +124,127 @@ class _LoginScreen extends State<LoginScreen> {
                 ],
               ),
               SizedBox(height:10),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 10,
+              Padding(
+                padding: EdgeInsets.all(30),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 10,
+                      )
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                        TextFormField(
+                        controller: _usernameController,
+                        keyboardType: TextInputType.name,
+                        textCapitalization: TextCapitalization.words,
+                        decoration: InputDecoration(
+                          labelText: 'Username',
+                          prefixIcon: Icon(
+                            Icons.person_outline_rounded,
+                            size: 30,
+                          ),
+                          filled: true,
+                          contentPadding: EdgeInsets.all(15),
+                          border: InputBorder.none,
+
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter Your Username';
+                          }
+                        }),
+                TextFormField(
+                    controller: _passwordController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      prefixIcon: Icon(
+                        Icons.tag,
+                        size: 30,
+                      ),
+                      suffixIcon: GestureDetector(
+                        onTap: (){
+                          setState(() {
+                            _showPassword = !_showPassword;
+                          });
+                        },
+                        child: Icon(
+                          _showPassword ? Icons.visibility : Icons.visibility_off,
+                        ),
+                      ),
+                      contentPadding: EdgeInsets.all(15),
+                    ),
+                    obscureText: !_showPassword,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Your Password';
+                      }
+                    }
+                    ),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: ElevatedButton(
+                      child: Text(
+                        'LOGIN',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          ConfirmLogin();
+                        }
+                      }
+                      ),
+                ),
+                Container(
+                    child: Column(
+                      children: [
+                        Divider(
+                          thickness: 1, // thickness of the line
+                          indent: 20, // empty space to the leading edge of divider.
+                          endIndent: 20, // empty space to the trailing edge of the divider.
+                          color: Colors.black, // The color to use when painting the line.
+                          height: 15, // The divider's height extent.
+                        ),
+                        Text("Don't have an account?",
+                            style: TextStyle(fontSize: 15)
+                        )
+                      ],
                     )
                 ),
-                child: Column(
-                children: [
-                      Container(
-                          child: Text("Login",
-                              style: TextStyle(fontSize: 20)
-                          )
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: OutlinedButton(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0))),
                       ),
-                      SizedBox(height:5),
-                      TextFormField(
-                      controller: _usernameController,
-                      keyboardType: TextInputType.name,
-                      textCapitalization: TextCapitalization.words,
-                      decoration: InputDecoration(
-                        labelText: 'Enter your Username',
-                        prefixIcon: Icon(
-                          Icons.person_outline_rounded,
-                          size: 30,
+                      child: Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
                         ),
-                        filled: true,
-                        contentPadding: EdgeInsets.all(15),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter Your Username';
-                        }
-                      }),
-              TextFormField(
-                  controller: _passwordController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: 'Enter Your Password',
-                    prefixIcon: Icon(
-                      Icons.tag,
-                      size: 30,
-                    ),
-                    suffixIcon: GestureDetector(
-                      onTap: (){
-                        setState(() {
-                          _showPassword = !_showPassword;
-                        });
-                      },
-                      child: Icon(
-                        _showPassword ? Icons.visibility : Icons.visibility_off,
+                      onPressed: () {
+                        RegisterScreenButton();
+                        },
                       ),
-                    ),
-                    contentPadding: EdgeInsets.all(15),
-                  ),
-                  obscureText: !_showPassword,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter Your Password';
-                    }
-                  }
-                  ),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: ElevatedButton(
-                    child: Text(
-                      'LOGIN',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        ConfirmLogin();
-                      }/**/
-                    }
-                    ),
-              ),
-              Container(
-                  child: Column(
-                    children: [
-                      Text("------------- or ------------",
-                          style: TextStyle(fontSize: 20)
-                      )
-                    ],
-                  )
-              ),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: OutlinedButton(
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0))),
-                    ),
-                    child: Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    onPressed: () {
-                      RegisterScreenButton();
-                      },
-                    ),
-              ),
-              SizedBox(height:30)
+                ),
+                SizedBox(height:30)
             ],
           ),
+                ),
               ),
             ],
       ),
