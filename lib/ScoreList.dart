@@ -69,7 +69,11 @@ class _ScoreList extends State<ScoreList> {
            body: {
              'operation': operation,
              'student_id': student_id
-           });
+           },
+          headers: {
+             'token': widget.token
+          }
+       );
        print("test");
        if (postresponse.statusCode == 200) {
          var items = json.decode(postresponse.body);
@@ -167,6 +171,7 @@ class _ScoreList extends State<ScoreList> {
                 return Card(
                   margin: EdgeInsets.all(10),
                   child: ListTile(
+                    dense: true,
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children:<Widget>[
