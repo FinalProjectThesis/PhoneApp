@@ -117,8 +117,6 @@ class _EditChild extends State<EditChild> {
             "token":widget.token
           },
         );
-      }
-        );
         Timer(Duration(seconds: 2), () {
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
@@ -135,6 +133,8 @@ class _EditChild extends State<EditChild> {
               )
           );
         }
+        );
+      }
         );
         /*Navigator.push(context,MaterialPageRoute(builder: (context) => ContactList(token: widget.token,))).then((value) {
           setState(() {});
