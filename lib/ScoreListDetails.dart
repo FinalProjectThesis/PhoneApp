@@ -116,33 +116,38 @@ class _ScoreListDetails extends State<ScoreListDetails> {
           Container(
             child: Text("Student's Score: " + items[int.parse(widget.index)]["rawscore"].toString() + "/" + items[0]["totalscore"].toString())
           ),
-          Container(
-            child: SfCartesianChart(
-                title: ChartTitle(text: "Scores of " + widget.student_name + ", " + "Difficulty: " + widget.difficulty),
-                primaryXAxis: CategoryAxis(
-                    title: AxisTitle(
-                        text: 'Time',
-                        textStyle: TextStyle(
-                            color: Colors.black,
-                            fontFamily: 'Roboto',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w300
-                        )
+             Container(
+               child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                    SfCartesianChart(
+                    title: ChartTitle(text: "Scores of " + widget.student_name + ", " + "Difficulty: " + widget.difficulty),
+                    primaryXAxis: CategoryAxis(
+                        title: AxisTitle(
+                            text: 'Time',
+                            textStyle: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Roboto',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w300
+                            )
+                        ),
                     ),
-                ),
-                series: <ChartSeries>[
-          // Renders line chart
-          LineSeries<ChartData, String>(
-              dataSource: chartData,
-              xValueMapper: (ChartData data, _) => data.date,
-              yValueMapper: (ChartData data, _) => data.rawscore,
-              markerSettings: MarkerSettings(
-                isVisible: true
-            )
-          )
-        ]
-      )
+                    series: <ChartSeries>[
+              // Renders line chart
+              LineSeries<ChartData, String>(
+                  dataSource: chartData,
+                  xValueMapper: (ChartData data, _) => data.date,
+                  yValueMapper: (ChartData data, _) => data.rawscore,
+                  markerSettings: MarkerSettings(
+                    isVisible: true
+                )
+              )
+          ]
+        ),
+      ]
     ),
+          ),
         ],
       )
     );
