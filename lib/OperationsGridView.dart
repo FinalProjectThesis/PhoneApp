@@ -32,6 +32,7 @@ class _OperationsGridView extends State<OperationsGridView> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Select an Operation'),
+          elevation:0,
         ),
         body: buildGridview(context),
     );
@@ -66,6 +67,13 @@ class _OperationsGridView extends State<OperationsGridView> {
   Widget buildGridview(BuildContext context) {
     return Scaffold(
         body: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors:[Colors.purple,Colors.orange]
+              )
+          ),
             child: GridView.count(
               padding: EdgeInsets.zero,
               crossAxisCount: 2,

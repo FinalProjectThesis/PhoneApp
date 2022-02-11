@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:thesis_mobile_app/ChildrenList.dart';
+import 'package:google_fonts/google_fonts.dart';
 void main() {
   runApp(MyApp());
 }
@@ -44,6 +45,8 @@ class _LoginScreen extends State<LoginScreen> {
     super.initState();
     _passwordController = TextEditingController();
     _usernameController = TextEditingController();
+
+
   }
 
   ConfirmLogin() async {
@@ -53,6 +56,7 @@ class _LoginScreen extends State<LoginScreen> {
         Uri.http('uslsthesisapi.herokuapp.com', '/login'),
         body: {'username': username, 'password': userpassword});
     var response = json.decode(postresponse.body);
+    print (response);
     if (response == "Failed") {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.deepOrange,
@@ -65,7 +69,20 @@ class _LoginScreen extends State<LoginScreen> {
           ),
         ),
       ));
-    } else {
+    }
+    else if (response == 'No such User') {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.deepOrange,
+        content: Container(
+          height: 15,
+          child: Row(
+            children: [
+              Text('No such username exists'),
+            ],
+          ),
+        ),
+      ));
+    }else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.lightGreen,
         content: Container(
@@ -90,7 +107,8 @@ class _LoginScreen extends State<LoginScreen> {
           builder: (BuildContext context) => ChildrenList(parent_username: parent_username, token: response),
         ),
             (route) => false,
-      );
+      ).then((value){ setState(() {});
+      });
     }
   }
 
@@ -101,153 +119,169 @@ class _LoginScreen extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: buildLoginScreen(context));
+    return GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Scaffold(
+          body: buildLoginScreen(context)),
+    );
+
   }
 
   @override
   Widget buildLoginScreen(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Column(
-                children: [
-                  SizedBox(height:20),
-                  Image.asset('assets/images/SampleLogo.png',
-                  height: 170,
-                  width: 300),
-                  SizedBox(height:10),
-                ],
-              ),
-              SizedBox(height:10),
-              Padding(
-                padding: EdgeInsets.all(30),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 10,
-                      )
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                        TextFormField(
-                        controller: _usernameController,
-                        keyboardType: TextInputType.name,
-                        textCapitalization: TextCapitalization.words,
-                        decoration: InputDecoration(
-                          labelText: 'Username',
-                          prefixIcon: Icon(
-                            Icons.person_outline_rounded,
-                            size: 30,
-                          ),
-                          filled: true,
-                          contentPadding: EdgeInsets.all(15),
-                          border: InputBorder.none,
-
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter Your Username';
-                          }
-                        }),
-                TextFormField(
-                    controller: _passwordController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: Icon(
-                        Icons.tag,
-                        size: 30,
-                      ),
-                      suffixIcon: GestureDetector(
-                        onTap: (){
-                          setState(() {
-                            _showPassword = !_showPassword;
-                          });
-                        },
-                        child: Icon(
-                          _showPassword ? Icons.visibility : Icons.visibility_off,
-                        ),
-                      ),
-                      contentPadding: EdgeInsets.all(15),
-                    ),
-                    obscureText: !_showPassword,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter Your Password';
-                      }
-                    }
-                    ),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: ElevatedButton(
-                      child: Text(
-                        'LOGIN',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          ConfirmLogin();
-                        }
-                      }
-                      ),
-                ),
-                Container(
-                    child: Column(
-                      children: [
-                        Divider(
-                          thickness: 1, // thickness of the line
-                          indent: 20, // empty space to the leading edge of divider.
-                          endIndent: 20, // empty space to the trailing edge of the divider.
-                          color: Colors.black, // The color to use when painting the line.
-                          height: 15, // The divider's height extent.
-                        ),
-                        Text("Don't have an account?",
-                            style: TextStyle(fontSize: 15)
-                        )
-                      ],
-                    )
-                ),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: OutlinedButton(
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0))),
-                      ),
-                      child: Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      onPressed: () {
-                        RegisterScreenButton();
-                        },
-                      ),
-                ),
-                SizedBox(height:30)
-            ],
+      backgroundColor: Colors.transparent,
+      body: SizedBox.expand(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors:[Colors.purple,Colors.orange]
+            )
           ),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Column(
+                      children: [
+                        SizedBox(height:20),
+                        Image.asset('assets/images/keys.png',
+                        height: 170,
+                        width: 300),
+                        SizedBox(height:10),
+                      ],
+                    ),
+                    SizedBox(height:10),
+                    Padding(
+                      padding: EdgeInsets.all(30),
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                              TextFormField(
+                              controller: _usernameController,
+                              keyboardType: TextInputType.name,
+                              textCapitalization: TextCapitalization.words,
+                              decoration: InputDecoration(
+                                labelText: 'Username',
+                                prefixIcon: Icon(
+                                  Icons.person_outline_rounded,
+                                  size: 30,
+                                ),
+                                contentPadding: EdgeInsets.all(15),
+                                hintText: "Enter Username"
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter Your Username';
+                                  }
+                                }
+                              ),
+                      TextFormField(
+                          controller: _passwordController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            prefixIcon: Icon(
+                              Icons.tag,
+                              size: 30,
+                            ),
+                            suffixIcon: GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  _showPassword = !_showPassword;
+                                });
+                              },
+                              child: Icon(
+                                _showPassword ? Icons.visibility : Icons.visibility_off,
+                              ),
+                            ),
+                            contentPadding: EdgeInsets.all(15),
+                              hintText: "Enter Password"
+                          ),
+                          obscureText: !_showPassword,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter Your Password';
+                            }
+                          }
+                          ),
+                      SizedBox(height: 20),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: OutlinedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.teal,
+                              shape: StadiumBorder(),
+                            ),
+                            child: Text(
+                              'Login',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                ConfirmLogin();
+                              }
+                            }
+                            ),
+                      ),
+                      Container(
+                          child: Column(
+                            children: [
+                              Divider(
+                                thickness: 1, // thickness of the line
+                                indent: 20, // empty space to the leading edge of divider.
+                                endIndent: 20, // empty space to the trailing edge of the divider.
+                                color: Colors.black, // The color to use when painting the line.
+                                height: 15, // The divider's height extent.
+                              ),
+                              Text("Don't have an account?",
+                                  style: TextStyle(fontSize: 15)
+                              )
+                            ],
+                          )
+                      ),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: OutlinedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.teal,
+                            shape: StadiumBorder(),
+                          ),
+                          child: Text(
+                            'Sign up',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                            onPressed: () {
+                              RegisterScreenButton();
+                              },
+                            ),
+                      ),
+                      SizedBox(height:30)
+                  ],
                 ),
+                      ),
+                    ),
+                  ],
+            ),
               ),
-            ],
-      ),
+            ),
+          ),
         ),
       ),
     );
@@ -260,11 +294,13 @@ class RegisterRoute extends StatefulWidget {
 }
 
 class _RegisterRoute extends State<RegisterRoute> {
-  final _formKey = GlobalKey<FormState>(); // For Storing Form state
+  final _formKey = GlobalKey<FormState>();
+  bool _showPassword = false;// For Storing Form state
   late TextEditingController _passwordController,
       _usernameController,
       _firstnameController,
-      _lastnameController;
+      _lastnameController,
+      _ConfirmpasswordController;
 
   @override
   void initState() {
@@ -274,6 +310,7 @@ class _RegisterRoute extends State<RegisterRoute> {
     _usernameController = TextEditingController();
     _firstnameController = TextEditingController();
     _lastnameController = TextEditingController();
+    _ConfirmpasswordController = TextEditingController();
   }
 
   RegisterUser() async {
@@ -281,6 +318,7 @@ class _RegisterRoute extends State<RegisterRoute> {
     String userpassword = _passwordController.text;
     String userfirstname = _firstnameController.text;
     String userlastname = _lastnameController.text;
+    String confirmpassword = _ConfirmpasswordController.text;
     var postresponse =
         await post(Uri.http('uslsthesisapi.herokuapp.com', '/register'), body: {
       'username': username,
@@ -324,129 +362,184 @@ class _RegisterRoute extends State<RegisterRoute> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Add User to MongoDB'),
-        ),
-        body: buildRegisterScreen(context));
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+          body: buildRegisterScreen(context)),
+    );
   }
 
   @override
   Widget buildRegisterScreen(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextFormField(
-                    controller: _usernameController,
-                    keyboardType: TextInputType.name,
-                    textCapitalization: TextCapitalization.words,
-                    decoration: InputDecoration(
-                      labelText: 'Enter your Username',
-                      prefixIcon: Icon(
-                        Icons.person_outline_rounded,
-                        size: 30,
+    return Scaffold(
+      body: SizedBox.expand(
+        child: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors:[Colors.purple,Colors.orange]
+              )
+          ),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 20),
+                          Text("Sign Up",
+                          style: GoogleFonts.openSans(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                        ],
                       ),
-                      fillColor: Colors.white,
-                      filled: true,
-                      contentPadding: EdgeInsets.all(15),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter Your Username';
-                      }
-                    }),
-                TextFormField(
-                    controller: _passwordController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Enter the Password',
-                      prefixIcon: Icon(
-                        Icons.tag,
-                        size: 30,
+                      TextFormField(
+                          controller: _usernameController,
+                          keyboardType: TextInputType.name,
+                          textCapitalization: TextCapitalization.words,
+                          decoration: InputDecoration(
+                          labelText: 'Username',
+                          prefixIcon: Icon(
+                            Icons.person_outline_rounded,
+                            size: 30,
+                          ),
+                          contentPadding: EdgeInsets.all(15),
+                          hintText: "Enter Username"
                       ),
-                      fillColor: Colors.white,
-                      filled: true,
-                      contentPadding: EdgeInsets.all(15),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter Your Password';
-                      }
-                    }),
-                TextFormField(
-                    controller: _firstnameController,
-                    keyboardType: TextInputType.name,
-                    decoration: InputDecoration(
-                      labelText: 'Enter your First Name ',
-                      fillColor: Colors.white,
-                      filled: true,
-                      contentPadding: EdgeInsets.all(15),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please Enter your First Name';
-                        }
-                      }
-                    ),
-                TextFormField(
-                    controller: _lastnameController,
-                    keyboardType: TextInputType.name,
-                    decoration: InputDecoration(
-                      labelText: 'Enter your Last Name',
-                      fillColor: Colors.white,
-                      filled: true,
-                      contentPadding: EdgeInsets.all(15),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your Last Name';
-                      }
-                    }),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: ElevatedButton(
-                      child: Text(
-                        'PROCEED',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter Your Username';
+                            }
+                          }),
+                      TextFormField(
+                          controller: _passwordController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Enter the Password',
+                            prefixIcon: Icon(
+                              Icons.tag,
+                              size: 30,
+                            ),
+                            suffixIcon: GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  _showPassword = !_showPassword;
+                                });
+                              },
+                              child: Icon(
+                                _showPassword ? Icons.visibility : Icons.visibility_off,
+                              ),
+                            ),
+                            contentPadding: EdgeInsets.all(15),
+                          ),
+                          obscureText: !_showPassword,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter Your Password';
+                              }
+                            }
+                          ),
+                      TextFormField(
+                          controller: _ConfirmpasswordController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Confirm your Password',
+                            prefixIcon: Icon(
+                              Icons.tag,
+                              size: 30,
+                            ),
+                            contentPadding: EdgeInsets.all(15),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter Your Password';
+                            }else if (_ConfirmpasswordController != _passwordController){
+                              return 'Please Type the same Password you entered earlier!';
+                            }
+                          }
                       ),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()){
-                          RegisterUser();
-                        }
-                      }),
+                      TextFormField(
+                          controller: _firstnameController,
+                          keyboardType: TextInputType.name,
+                          decoration: InputDecoration(
+                            labelText: 'Enter your First Name ',
+                            contentPadding: EdgeInsets.all(15),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please Enter your First Name';
+                              }
+                            }
+                          ),
+                      TextFormField(
+                          controller: _lastnameController,
+                          keyboardType: TextInputType.name,
+                          decoration: InputDecoration(
+                            labelText: 'Enter your Last Name',
+                            contentPadding: EdgeInsets.all(15),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your Last Name';
+                              }
+                            }
+                          ),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.teal,
+                              shape: StadiumBorder(),
+                            ),
+                            child: Text(
+                              'PROCEED',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()){
+                                RegisterUser();
+                              }
+                            }),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.teal,
+                              shape: StadiumBorder(),
+                            ),
+                            child: Text(
+                              'BACK TO LOGIN',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            }),
+                      ),
+                    ],
+                  ),
                 ),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: ElevatedButton(
-                      child: Text(
-                        'BACK TO LOGIN',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    LoginScreen()))
-                            .then((value) => setState(() {}));
-                      }),
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -524,11 +617,14 @@ class _ChildSetup extends State<ChildSetup> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Add Child to Said Parent'),
-        ),
-        body: buildRegisterScreen(context));
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Add Child to Said Parent'),
+          ),
+          body: buildRegisterScreen(context)),
+    );
   }
   @override
   Widget buildRegisterScreen(BuildContext context) {
@@ -549,8 +645,6 @@ class _ChildSetup extends State<ChildSetup> {
                       Icons.person_outline_rounded,
                       size: 30,
                     ),
-                    fillColor: Colors.white,
-                    filled: true,
                     contentPadding: EdgeInsets.all(15),
                   ),
                   validator: (value) {
@@ -568,8 +662,6 @@ class _ChildSetup extends State<ChildSetup> {
                       Icons.phone,
                       size: 30,
                     ),
-                    fillColor: Colors.white,
-                    filled: true,
                     contentPadding: EdgeInsets.all(15),
                   ),
                   validator: (value) {
@@ -581,6 +673,10 @@ class _ChildSetup extends State<ChildSetup> {
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.teal,
+                      shape: StadiumBorder(),
+                    ),
                     child: Text(
                       'REGISTER USER',
                       style: TextStyle(

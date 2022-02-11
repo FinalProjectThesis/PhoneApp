@@ -38,6 +38,7 @@ dependencies:
   basic_utils: ^3.9.4
   double_back_to_close_app: ^2.1.0
   syncfusion_flutter_charts: ^19.4.43
+  google_fonts: ^2.2.0
 
 dev_dependencies:
   flutter_test:
