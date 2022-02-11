@@ -2,8 +2,7 @@
 
 A Flutter project for the thesis
 
-## Downloads:
-[All Build Releases](https://github.com/FinalProjectThesis/PhoneApp/releases)
+## All Build Releases(https://github.com/FinalProjectThesis/PhoneApp/releases)
 
   
 
