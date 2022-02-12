@@ -370,6 +370,7 @@ class RegisterRoute extends StatefulWidget {
 class _RegisterRoute extends State<RegisterRoute> {
   final _formKey = GlobalKey<FormState>();
   bool _showPassword = false;// For Storing Form state
+  bool isLoading = false;
   late TextEditingController _passwordController,
       _usernameController,
       _firstnameController,
@@ -393,59 +394,94 @@ class _RegisterRoute extends State<RegisterRoute> {
     String userfirstname = _firstnameController.text;
     String userlastname = _lastnameController.text;
     String confirmpassword = _ConfirmpasswordController.text;
-    var postresponse =
-    await post(Uri.http('uslsthesisapi.herokuapp.com', '/register'), body: {
-      'username': username,
-      'password': userpassword,
-      'first_name': userfirstname,
-      'last_name': userlastname
-    });
-    var response = json.decode(postresponse.body);
-    if (postresponse.statusCode==200){
-    if (response == "SameUsername") {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.deepOrange,
-        content: Container(
-          height: 15,
-          child: Row(
-            children: [
-              Text('Another User has the Same Username'),
-            ],
+    try {
+      var postresponse = await post(
+          Uri.http('uslsthesisapi.herokuapp.com', '/register'), body: {
+        'username': username,
+        'password': userpassword,
+        'first_name': userfirstname,
+        'last_name': userlastname
+      });
+      var response = json.decode(postresponse.body);
+      if (postresponse.statusCode == 200) {
+        if (response == "SameUsername") {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.deepOrange,
+            content: Container(
+              height: 15,
+              child: Row(
+                children: [
+                  Text('Another User has the Same Username'),
+                ],
+              ),
+            ),
+          ));
+          setState(() {
+            isLoading=false;
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.lightGreen,
+            content: Container(
+              height: 15,
+              child: Row(
+                children: [
+                  Text('User has been created'),
+                ],
+              ),
+            ),
+          ));
+          String parent_username = username;
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      ChildSetup(parent_username: parent_username)))
+              .then((value) => setState(() {}));
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.deepOrange,
+          content: Container(
+            height: 15,
+            child: Row(
+              children: [
+                Text('Error'),
+              ],
+            ),
           ),
-        ),
-      ));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.lightGreen,
-        content: Container(
-          height: 15,
-          child: Row(
-            children: [
-              Text('User has been created'),
-            ],
-          ),
-        ),
-      ));
-      String parent_username = username;
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  ChildSetup(parent_username: parent_username)))
-          .then((value) => setState(() {}));
+        ));
       }
-    }else{
+    } on TimeoutException catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.deepOrange,
         content: Container(
           height: 15,
           child: Row(
             children: [
-              Text('Error'),
+              Text('API Error, Please Check Internet Connection'),
             ],
           ),
         ),
       ));
+      setState(() {
+        isLoading = false;
+      });
+    }on SocketException catch(_){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.deepOrange,
+        content: Container(
+          height: 15,
+          child: Row(
+            children: [
+              Text('API Error, Please Check Internet Connection'),
+            ],
+          ),
+        ),
+      ));
+      setState(() {
+        isLoading = false;
+      });
     }
   }
   @override
@@ -541,18 +577,19 @@ class _RegisterRoute extends State<RegisterRoute> {
                           controller: _ConfirmpasswordController,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            labelText: 'Confirm your Password',
+                            labelText: 'Confirm Your Password',
                             prefixIcon: Icon(
                               Icons.tag,
                               size: 30,
                             ),
                             contentPadding: EdgeInsets.all(15),
                           ),
+                          obscureText: !_showPassword,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter Your Password';
-                            }else if (_ConfirmpasswordController != _passwordController){
-                              return 'Please Type the same Password you entered earlier!';
+                              return 'Please Repeat your password';
+                            }else if(value.toString() != _passwordController.text.toString()) {
+                              return 'Please Confirm Your password';
                             }
                           }
                       ),
@@ -585,24 +622,43 @@ class _RegisterRoute extends State<RegisterRoute> {
                       Container(
                         width: double.infinity,
                         padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: ElevatedButton(
+                        child: OutlinedButton(
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.teal,
-                              shape: StadiumBorder(),
+                                primary: Colors.teal,
+                                shape: StadiumBorder(),
+                                onSurface: Colors.indigo
                             ),
-                            child: Text(
-                              'PROCEED',
+                            child: isLoading
+                                ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(width:20, height:20, child:CircularProgressIndicator(color:Colors.white)),
+                                const SizedBox(width:24),
+                                Text("Please Wait....",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600
+                                    ))
+                              ],
+                            )
+                                :Text(
+                              'Login',
                               style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()){
+                            onPressed: !isLoading ? () async {
+                              if (_formKey.currentState!.validate()) {
                                 RegisterUser();
+                                if (isLoading==false) return
+                                  setState(() => isLoading = true);
                               }
-                            }),
+                            }
+                                :null
+                        ),
                       ),
                       Container(
                         width: double.infinity,
@@ -613,7 +669,7 @@ class _RegisterRoute extends State<RegisterRoute> {
                               shape: StadiumBorder(),
                             ),
                             child: Text(
-                              'BACK TO LOGIN',
+                              'Back to Login',
                               style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.white,
@@ -648,6 +704,7 @@ class ChildSetup extends StatefulWidget {
 class _ChildSetup extends State<ChildSetup> {
   final _formKey = GlobalKey<FormState>(); // For Storing Form state
   late TextEditingController _childnameController, _childageController;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -661,60 +718,92 @@ class _ChildSetup extends State<ChildSetup> {
     String studentname = _childnameController.text;
     String studentage = _childageController.text;
     String parent_username = widget.parent_username;
-    var postresponse =
-    await post(Uri.http('uslsthesisapi.herokuapp.com', '/childadd'), body: {
-      "student_name": studentname,
-      "student_age": studentage,
-      "parent_username": parent_username
-    });
-    if (postresponse.statusCode==200){
-    var response = json.decode(postresponse.body);
-    if (response == "Success") {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+    try {
+      var postresponse = await post(
+          Uri.http('uslsthesisapi.herokuapp.com', '/childadd'), body: {
+        "student_name": studentname,
+        "student_age": studentage,
+        "parent_username": parent_username
+      }).timeout(const Duration(seconds: 10));
+      if (postresponse.statusCode == 200) {
+        var response = json.decode(postresponse.body);
+        if (response == "Success") {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.deepOrange,
+              content: Container(
+                height: 15,
+                child: Row(
+                  children: [
+                    Text('User Successfully Registered With Child!'),
+                  ],
+                ),
+              ),
+            ),
+          );
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => LoginScreen(),
+            ),
+                (route) => false,
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.lightGreen,
+            content: Container(
+              height: 15,
+              child: Row(
+                children: [
+                  Text('There is an Error.'),
+                ],
+              ),
+            ),
+          ));
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.deepOrange,
           content: Container(
             height: 15,
             child: Row(
               children: [
-                Text('User Successfully Registered With Child!'),
+                Text('Error'),
               ],
             ),
           ),
-        ),
-      );
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => LoginScreen(),
-        ),
-            (route) => false,
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.lightGreen,
-        content: Container(
-          height: 15,
-          child: Row(
-            children: [
-              Text('There is an Error.'),
-            ],
-          ),
-        ),
-      ));
+        ));
       }
-    }else{
+    }on TimeoutException catch(_){
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.deepOrange,
         content: Container(
           height: 15,
           child: Row(
             children: [
-              Text('Error'),
+              Text('API Error, Please Check Internet Connection'),
             ],
           ),
         ),
       ));
+      setState(() {
+        isLoading = false;
+      });
+    }on SocketException catch(_){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.deepOrange,
+        content: Container(
+          height: 15,
+          child: Row(
+            children: [
+              Text('API Error, Please Check Internet Connection'),
+            ],
+          ),
+        ),
+      ));
+      setState(() {
+        isLoading = false;
+      });
     }
   }
   @override
@@ -774,22 +863,43 @@ class _ChildSetup extends State<ChildSetup> {
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 10),
-                child: ElevatedButton(
+                child: OutlinedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.teal,
-                      shape: StadiumBorder(),
+                        primary: Colors.teal,
+                        shape: StadiumBorder(),
+                        onSurface: Colors.indigo
                     ),
-                    child: Text(
-                      'REGISTER USER',
+                    child: isLoading
+                        ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(width:20, height:20, child:CircularProgressIndicator(color:Colors.white)),
+                        const SizedBox(width:24),
+                        Text("Please Wait....",
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600
+                            ))
+                      ],
+                    )
+                        :Text(
+                      'Login',
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    onPressed: () {
-                      RegisterUser();
-                    }),
+                    onPressed: !isLoading ? () async {
+                      if (_formKey.currentState!.validate()) {
+                        RegisterUser();
+                        if (isLoading==false) return
+                          setState(() => isLoading = true);
+                      }
+                    }
+                    :null
+                ),
               ),
             ],
           ),
