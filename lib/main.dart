@@ -36,7 +36,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreen extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>(); // For Storing Form state
   late TextEditingController _passwordController, _usernameController;
-  bool isLoading= false;
+  bool isLoading = false;
   bool _showPassword = false;
 
   @override
@@ -45,8 +45,6 @@ class _LoginScreen extends State<LoginScreen> {
     super.initState();
     _passwordController = TextEditingController();
     _usernameController = TextEditingController();
-
-
   }
 
   ConfirmLogin() async {
@@ -56,7 +54,8 @@ class _LoginScreen extends State<LoginScreen> {
         Uri.http('uslsthesisapi.herokuapp.com', '/login'),
         body: {'username': username, 'password': userpassword});
     var response = json.decode(postresponse.body);
-    print (response);
+    print(response);
+    if (postresponse.statusCode == 200) {
     if (response == "Failed") {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.deepOrange,
@@ -88,7 +87,7 @@ class _LoginScreen extends State<LoginScreen> {
       setState(() {
         isLoading = false;
       });
-    }else {
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.lightGreen,
         content: Container(
@@ -110,14 +109,28 @@ class _LoginScreen extends State<LoginScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => ChildrenList(parent_username: parent_username, token: response),
+          builder: (BuildContext context) =>
+              ChildrenList(parent_username: parent_username, token: response),
         ),
             (route) => false,
-      ).then((value){ setState(() {});
+      ).then((value) {
+        setState(() {});
       });
     }
-  }
-
+  }else{
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.deepOrange,
+        content: Container(
+          height: 15,
+          child: Row(
+            children: [
+              Text('Please Check Internet Connection'),
+            ],
+          ),
+        ),
+      ));
+    }
+}
   RegisterScreenButton() async {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => RegisterRoute()));
@@ -344,13 +357,14 @@ class _RegisterRoute extends State<RegisterRoute> {
     String userlastname = _lastnameController.text;
     String confirmpassword = _ConfirmpasswordController.text;
     var postresponse =
-        await post(Uri.http('uslsthesisapi.herokuapp.com', '/register'), body: {
+    await post(Uri.http('uslsthesisapi.herokuapp.com', '/register'), body: {
       'username': username,
       'password': userpassword,
       'first_name': userfirstname,
       'last_name': userlastname
     });
     var response = json.decode(postresponse.body);
+    if (postresponse.statusCode==200){
     if (response == "SameUsername") {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.deepOrange,
@@ -377,11 +391,24 @@ class _RegisterRoute extends State<RegisterRoute> {
       ));
       String parent_username = username;
       Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      ChildSetup(parent_username: parent_username)))
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ChildSetup(parent_username: parent_username)))
           .then((value) => setState(() {}));
+      }
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.deepOrange,
+        content: Container(
+          height: 15,
+          child: Row(
+            children: [
+              Text('Please Check Internet Connection'),
+            ],
+          ),
+        ),
+      ));
     }
   }
   @override
@@ -598,11 +625,12 @@ class _ChildSetup extends State<ChildSetup> {
     String studentage = _childageController.text;
     String parent_username = widget.parent_username;
     var postresponse =
-        await post(Uri.http('uslsthesisapi.herokuapp.com', '/childadd'), body: {
+    await post(Uri.http('uslsthesisapi.herokuapp.com', '/childadd'), body: {
       "student_name": studentname,
       "student_age": studentage,
       "parent_username": parent_username
     });
+    if (postresponse.statusCode==200){
     var response = json.decode(postresponse.body);
     if (response == "Success") {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -633,6 +661,19 @@ class _ChildSetup extends State<ChildSetup> {
           child: Row(
             children: [
               Text('There is an Error.'),
+            ],
+          ),
+        ),
+      ));
+      }
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.deepOrange,
+        content: Container(
+          height: 15,
+          child: Row(
+            children: [
+              Text('Please Check Internet Connection'),
             ],
           ),
         ),
