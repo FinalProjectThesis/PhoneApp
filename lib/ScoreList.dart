@@ -97,8 +97,11 @@ class _ScoreList extends State<ScoreList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text("Scores of " + widget.student_name),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       //if Refresh = false then load circular progress indicator, else load _buildcontactlist widget
       body: refresh ? Center(
@@ -109,101 +112,110 @@ class _ScoreList extends State<ScoreList> {
   }
   Widget _buildScoreList(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(height:20),
-          Container(
-            child: Text(
-              widget.operation.toUpperCase(),
-              style: TextStyle(
-                shadows: [
-                  Shadow(
-                      color: Colors.black,
-                      offset: Offset(0, -5))
-                ],
-                color: Colors.transparent,
-                decoration:
-                TextDecoration.underline,
-                decorationColor: Colors.blue,
-                decorationThickness: 4,
-                decorationStyle:
-                TextDecorationStyle.dashed,
+      body: Container(
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors:[Colors.purple,Colors.orange]
+            )
+        ),
+        child: Column(
+          children: [
+            SizedBox(height:90),
+            Container(
+              child: Text(
+                widget.operation.toUpperCase(),
+                style: TextStyle(
+                  shadows: [
+                    Shadow(
+                        color: Colors.black,
+                        offset: Offset(0, -5))
+                  ],
+                  color: Colors.transparent,
+                  decoration:
+                  TextDecoration.underline,
+                  decorationColor: Colors.blue,
+                  decorationThickness: 4,
+                  decorationStyle:
+                  TextDecorationStyle.dashed,
+                ),
               ),
             ),
-          ),
-          SizedBox(height:20),
-          /*Align(
-                  child: Text("Difficulty: "),
-              alignment: Alignment(0.75,-0.90),
+            SizedBox(height:10),
+            /*Align(
+                    child: Text("Difficulty: "),
+                alignment: Alignment(0.75,-0.90),
     )*/
-              Align(
-                alignment: Alignment(0.90,-0.80),
-                  child: DropdownButton(
-                    value: dropdownvalue,
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    items:items.map((String items) {
-                      return DropdownMenuItem(
-                          value: items,
-                          child: Text(items),
-                      );
-                    }
-                    ).toList(),
-                    onChanged: (String? chosenValue){
-                      setState(() {
-                        dropdownvalue = chosenValue!;
-                            postItems();
-                      });
-                    },
-                    /*hint: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        "Select Difficulty",
-                        style: TextStyle(color:Colors.grey),
-                      )
-                    )*/
-                  ),
-              ),
-          _items.length > 0
-              ? Expanded(
-            child: ListView.builder(
-              itemCount: _items.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  margin: EdgeInsets.all(10),
-                  child: ListTile(
-                    dense: true,
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children:<Widget>[
-                          Text(_items[index]["rawscore"].toString()+'/'+_items[index]["totalscore"].toString())
-                        ]
-                      ),
-                      title: Text("Difficulty: "+ StringUtils.capitalize(_items[index][('difficulty')].toString().toUpperCase())),
-                      subtitle: Text("Date: "+_items[index]["date"].toString()),
-                    onTap: (){
-                      {
-                        Navigator.push(context,MaterialPageRoute(builder: (context) => ScoreListDetails(parent_username:widget.parent_username,student_id:_items[index]["student_id"].toString(),student_name:_items[index]["student_name"].toString(), operation:_items[index]["operation"],id:_items[index]["id"].toString(),index: index.toString(),difficulty: _items[index]["difficulty"], token: widget.token,))
+                Align(
+                  alignment: Alignment(0.60,-0.70),
+                    child: DropdownButton(
+                      value: dropdownvalue,
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      items:items.map((String items) {
+                        return DropdownMenuItem(
+                            value: items,
+                            child: Text(items),
                         );
                       }
-                    },
-                  ),
-                );
-              },
-            ),
-          )
-              : Container(
-            width: double.infinity,
-            height: 300,
-            alignment: Alignment.center,
-            child: Container(
-              width: 200,
-              height: 200,
-              child: Text(
-                  "Empty!, Please Take a Test with this difficulty and operation to add into this list!",
-              textAlign: TextAlign.center,)
-            ),
-          )
-        ],
+                      ).toList(),
+                      onChanged: (String? chosenValue){
+                        setState(() {
+                          dropdownvalue = chosenValue!;
+                              postItems();
+                        });
+                      },
+                      /*hint: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "Select Difficulty",
+                          style: TextStyle(color:Colors.grey),
+                        )
+                      )*/
+                    ),
+                ),
+            _items.length > 0
+                ? Expanded(
+              child: ListView.builder(
+                itemCount: _items.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    margin: EdgeInsets.all(5),
+                    child: ListTile(
+                      dense: true,
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children:<Widget>[
+                            Text(_items[index]["rawscore"].toString()+'/'+_items[index]["totalscore"].toString())
+                          ]
+                        ),
+                        title: Text("Difficulty: "+ StringUtils.capitalize(_items[index][('difficulty')].toString().toUpperCase())),
+                        subtitle: Text("Date: "+_items[index]["date"].toString()),
+                      onTap: (){
+                        {
+                          Navigator.push(context,MaterialPageRoute(builder: (context) => ScoreListDetails(parent_username:widget.parent_username,student_id:_items[index]["student_id"].toString(),student_name:_items[index]["student_name"].toString(), operation:_items[index]["operation"],id:_items[index]["id"].toString(),index: index.toString(),difficulty: _items[index]["difficulty"], token: widget.token,))
+                          );
+                        }
+                      },
+                    ),
+                  );
+                },
+              ),
+            )
+                : Container(
+              width: double.infinity,
+              height: 300,
+              alignment: Alignment.center,
+              child: Container(
+                width: 200,
+                height: 200,
+                child: Text(
+                    "Empty!, Please Take a Test with this difficulty and operation to add into this list!",
+                textAlign: TextAlign.center,)
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
