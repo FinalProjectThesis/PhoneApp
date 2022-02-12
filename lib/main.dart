@@ -691,7 +691,6 @@ class _RegisterRoute extends State<RegisterRoute> {
     );
   }
 }
-
 class ChildSetup extends StatefulWidget {
   final String parent_username;
 
@@ -735,7 +734,7 @@ class _ChildSetup extends State<ChildSetup> {
                 height: 15,
                 child: Row(
                   children: [
-                    Text('User Successfully Registered With Child!'),
+                    Text('Child Added to User'),
                   ],
                 ),
               ),
@@ -760,6 +759,9 @@ class _ChildSetup extends State<ChildSetup> {
               ),
             ),
           ));
+          setState(() {
+            isLoading= false;
+          });
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -884,7 +886,7 @@ class _ChildSetup extends State<ChildSetup> {
                       ],
                     )
                         :Text(
-                      'Login',
+                      'Register With Child',
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.white,
