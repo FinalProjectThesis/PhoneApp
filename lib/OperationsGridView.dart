@@ -212,37 +212,11 @@ class _OperationsGridView extends State<OperationsGridView> {
                           }
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(15),
-                      child: InkWell(
-                        child:Container(
-                          child: Text("Profile"),
-                              color: Colors.white10,
-                        ),
-                          onTap:(){
-                            ProfileViewerScreen();
-                        }
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(15),
-                      child: InkWell(
-                          child:Container(
-                              child: Text("xd"),
-                            color: Colors.pink,
-                          ),
-                          onTap:(){
-                            ProfileViewerScreen();
-                            }
-                        ),
-                    )
-
                     ],
-                  ),
               ),
             ),
         ),
-
+        ),
     );
   }
 }
