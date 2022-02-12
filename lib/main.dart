@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/cupertino.dart';
@@ -57,7 +58,7 @@ class _LoginScreen extends State<LoginScreen> {
       var postresponse = await post(
           Uri.http('uslsthesisapi.herokuapp.com', '/login'),
           body: {'username': username, 'password': userpassword}).
-      timeout(const Duration(seconds: 5));
+      timeout(const Duration(seconds: 10));
       var response = json.decode(postresponse.body);
       if (postresponse.statusCode == 200) {
         if (response == "Failed") {
@@ -136,6 +137,21 @@ class _LoginScreen extends State<LoginScreen> {
         ));
       }
     }on TimeoutException catch(_){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.deepOrange,
+        content: Container(
+          height: 15,
+          child: Row(
+            children: [
+              Text('API Error, Please Check Internet Connection'),
+            ],
+          ),
+        ),
+      ));
+      setState(() {
+        isLoading = false;
+      });
+    }on SocketException catch(_){
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.deepOrange,
         content: Container(
