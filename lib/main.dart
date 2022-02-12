@@ -36,7 +36,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreen extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>(); // For Storing Form state
   late TextEditingController _passwordController, _usernameController;
-  bool isLoading=true;
+  bool isLoading= false;
   bool _showPassword = false;
 
   @override
@@ -69,6 +69,9 @@ class _LoginScreen extends State<LoginScreen> {
           ),
         ),
       ));
+      setState(() {
+        isLoading = false;
+      });
     }
     else if (response == 'No such User') {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -82,6 +85,9 @@ class _LoginScreen extends State<LoginScreen> {
           ),
         ),
       ));
+      setState(() {
+        isLoading = false;
+      });
     }else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.lightGreen,
@@ -219,8 +225,23 @@ class _LoginScreen extends State<LoginScreen> {
                             style: ElevatedButton.styleFrom(
                               primary: Colors.teal,
                               shape: StadiumBorder(),
+                              onSurface: Colors.indigo
                             ),
-                            child: Text(
+                            child: isLoading
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(width:20, height:20, child:CircularProgressIndicator(color:Colors.white)),
+                                const SizedBox(width:24),
+                                Text("Please Wait....",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                  fontWeight: FontWeight.w600
+                                ))
+                              ],
+                            )
+                            :Text(
                               'Login',
                               style: TextStyle(
                                 fontSize: 20,
@@ -228,11 +249,14 @@ class _LoginScreen extends State<LoginScreen> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            onPressed: () {
+                            onPressed: !isLoading ? () async {
                               if (_formKey.currentState!.validate()) {
                                 ConfirmLogin();
+                              if (isLoading==false) return
+                                setState(() => isLoading = true);
+                                }
                               }
-                            }
+                              :null
                             ),
                       ),
                       Container(
