@@ -30,8 +30,11 @@ class _OperationsGridView extends State<OperationsGridView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
         appBar: AppBar(
           title: Text('Select an Operation'),
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
           elevation:0,
         ),
         body: buildGridview(context),
@@ -74,118 +77,170 @@ class _OperationsGridView extends State<OperationsGridView> {
                   colors:[Colors.purple,Colors.orange]
               )
           ),
-            child: GridView.count(
-              padding: EdgeInsets.zero,
-              crossAxisCount: 2,
-              children: [
-                InkWell(
-                    child:Container(
-                        color: Colors.orange,
-                        child:Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children:[
-                              CircleAvatar(
-                                backgroundColor: Colors.primaries[Random().nextInt(
-                                    Colors.primaries.length)],
-                                child: Icon(
-                                    Icons.add,
-                                    size: 70
-                                ),
-                                radius:40,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 80.0),
+              child: SizedBox.expand(
+                child: GridView.count(
+                  padding: EdgeInsets.zero,
+                  crossAxisCount: 2,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(15),
+                      child: InkWell(
+                          child:Container(
+                              decoration: BoxDecoration(
+                                color: Colors.deepPurpleAccent,
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(12.0)
+                                )
                               ),
-                            ]
-                        )
+                              child:Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children:[
+                                    CircleAvatar(
+                                      backgroundColor: Colors.primaries[Random().nextInt(
+                                          Colors.primaries.length)],
+                                      child: Icon(
+                                          Icons.add,
+                                          size: 70
+                                      ),
+                                      radius:40,
+                                    ),
+                                    SizedBox(height:10),
+                                    Text("Addition")
+                                  ]
+                              )
+                          ),
+                          onTap:(){
+                           AdditionScoreList();
+                          }
+                      ),
                     ),
-                    onTap:(){
-                     AdditionScoreList();
-                    }
-                ),
-                InkWell(
-                    child:Container(
-                      color: Colors.red,
-                        child:Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children:[
-                          CircleAvatar(
-                            backgroundColor: Colors.primaries[Random().nextInt(
-                                Colors.primaries.length)],
-                            child: Icon(
-                                Icons.remove,
-                                size: 70
+                    Padding(
+                      padding: EdgeInsets.all(15),
+                      child: InkWell(
+                          child:Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.tealAccent,
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(12.0)
+                                  )
+                              ),
+                              child:Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children:[
+                                CircleAvatar(
+                                  backgroundColor: Colors.primaries[Random().nextInt(
+                                      Colors.primaries.length)],
+                                  child: Icon(
+                                      Icons.remove,
+                                      size: 70
+                                  ),
+                                  radius:40,
+                                ),
+                                SizedBox(height:10),
+                                Text("Subtraction")
+                              ]
+                          )
+                          ),
+                              onTap:(){
+                                SubtractionScoreList();
+                          }
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(15),
+                      child: InkWell(
+                          child:Container(
+                            decoration: BoxDecoration(
+                              color: Colors.cyan,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(12.0)
+                              )
                             ),
-                            radius:40,
-                          ),
-                        ]
-                    )
-                    ),
-                        onTap:(){
-                          SubtractionScoreList();
-                    }
-                ),
-                InkWell(
-                    child:Container(
-                      color: Colors.green,
-                      child:Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children:[
-                          CircleAvatar(
-                              backgroundColor: Colors.primaries[Random().nextInt(
-                                  Colors.primaries.length)],
-                              child: Icon(
-                                Icons.close,
-                                size: 70
-                              ),
-                              radius:40,
-                          ),
-                        ]
-                      )
-                    ),
-                    onTap:(){
-                      MultiplicationScoreList();
-                    }
-                ),
-                InkWell(
-                    child:Container(
-                    color: Colors.blue,
-                        child:Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children:[
-                              CircleAvatar(
-                                backgroundColor: Colors.primaries[Random().nextInt(
-                                    Colors.primaries.length)],
-                                child: Icon(
-                                  CupertinoIcons.divide,
-                                  size: 50,
+                            child:Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children:[
+                                CircleAvatar(
+                                    backgroundColor: Colors.primaries[Random().nextInt(
+                                        Colors.primaries.length)],
+                                    child: Icon(
+                                      Icons.close,
+                                      size: 70
+                                    ),
+                                    radius:40,
                                 ),
-                                radius:40,
+                                SizedBox(height:10),
+                                Text("Addition")
+                              ]
+                            )
+                          ),
+                          onTap:(){
+                            MultiplicationScoreList();
+                          }
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(15),
+                      child: InkWell(
+                          child:Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.purpleAccent,
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(12.0)
+                                  )
                               ),
-                            ]
-                        )
+                              child:Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children:[
+                                    CircleAvatar(
+                                      backgroundColor: Colors.primaries[Random().nextInt(
+                                          Colors.primaries.length)],
+                                      child: Icon(
+                                        CupertinoIcons.divide,
+                                        size: 50,
+                                      ),
+                                      radius:40,
+                                    ),
+                                    SizedBox(height:10),
+                                    Text("Division")
+                                  ]
+                              )
+                          ),
+                          onTap:(){
+                            DivisionScoreList();
+                          }
+                      ),
                     ),
-                    onTap:(){
-                      DivisionScoreList();
-                    }
-                ),
-                InkWell(
-                  child:Container(
-                    child: Text("Profile"),
-                        color: Colors.white10,
+                    Padding(
+                      padding: EdgeInsets.all(15),
+                      child: InkWell(
+                        child:Container(
+                          child: Text("Profile"),
+                              color: Colors.white10,
+                        ),
+                          onTap:(){
+                            ProfileViewerScreen();
+                        }
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(15),
+                      child: InkWell(
+                          child:Container(
+                              child: Text("xd"),
+                            color: Colors.pink,
+                          ),
+                          onTap:(){
+                            ProfileViewerScreen();
+                            }
+                        ),
+                    )
+
+                    ],
                   ),
-                    onTap:(){
-                      ProfileViewerScreen();
-                  }
-                ),
-                InkWell(
-                    child:Container(
-                        child: Text("xd"),
-                      color: Colors.pink,
-                    ),
-                    onTap:(){
-                      ProfileViewerScreen();
-                      }
-                  )
-                ],
               ),
+            ),
         ),
 
     );

@@ -1,7 +1,10 @@
 
+import 'dart:async';
+
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:thesis_mobile_app/ChildrenList.dart';
@@ -50,87 +53,105 @@ class _LoginScreen extends State<LoginScreen> {
   ConfirmLogin() async {
     String username = _usernameController.text;
     String userpassword = _passwordController.text;
-    var postresponse = await post(
-        Uri.http('uslsthesisapi.herokuapp.com', '/login'),
-        body: {'username': username, 'password': userpassword});
-    var response = json.decode(postresponse.body);
-    print(response);
-    if (postresponse.statusCode == 200) {
-    if (response == "Failed") {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.deepOrange,
-        content: Container(
-          height: 15,
-          child: Row(
-            children: [
-              Text('Wrong Username or Password'),
-            ],
-          ),
-        ),
-      ));
-      setState(() {
-        isLoading = false;
-      });
-    }
-    else if (response == 'No such User') {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.deepOrange,
-        content: Container(
-          height: 15,
-          child: Row(
-            children: [
-              Text('No such username exists'),
-            ],
-          ),
-        ),
-      ));
-      setState(() {
-        isLoading = false;
-      });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.lightGreen,
-        content: Container(
-          height: 15,
-          child: Row(
-            children: [
-              Text('Login Succeeded'),
-            ],
-          ),
-        ),
-      ));
-      String parent_username = username;
-      /*Navigator.pushReplacement(
+    try {
+      var postresponse = await post(
+          Uri.http('uslsthesisapi.herokuapp.com', '/login'),
+          body: {'username': username, 'password': userpassword}).
+      timeout(const Duration(seconds: 5));
+      var response = json.decode(postresponse.body);
+      if (postresponse.statusCode == 200) {
+        if (response == "Failed") {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.deepOrange,
+            content: Container(
+              height: 15,
+              child: Row(
+                children: [
+                  Text('Wrong Username or Password'),
+                ],
+              ),
+            ),
+          ));
+          setState(() {
+            isLoading = false;
+          });
+        }
+        else if (response == 'No such User') {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.deepOrange,
+            content: Container(
+              height: 15,
+              child: Row(
+                children: [
+                  Text('No such username exists'),
+                ],
+              ),
+            ),
+          ));
+          setState(() {
+            isLoading = false;
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.lightGreen,
+            content: Container(
+              height: 15,
+              child: Row(
+                children: [
+                  Text('Login Succeeded'),
+                ],
+              ),
+            ),
+          ));
+          String parent_username = username;
+          /*Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (context) =>
                       ChildrenList(parent_username: parent_username)))
           .then((value) => setState(() {}));*/
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) =>
-              ChildrenList(parent_username: parent_username, token: response),
-        ),
-            (route) => false,
-      ).then((value) {
-        setState(() {});
-      });
-    }
-  }else{
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  ChildrenList(
+                      parent_username: parent_username, token: response),
+            ),
+                (route) => false,
+          ).then((value) {
+            setState(() {});
+          });
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.deepOrange,
+          content: Container(
+            height: 15,
+            child: Row(
+              children: [
+                Text('Error'),
+              ],
+            ),
+          ),
+        ));
+      }
+    }on TimeoutException catch(_){
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.deepOrange,
         content: Container(
           height: 15,
           child: Row(
             children: [
-              Text('Please Check Internet Connection'),
+              Text('API Error, Please Check Internet Connection'),
             ],
           ),
         ),
       ));
+      setState(() {
+        isLoading = false;
+      });
     }
-}
+  }
   RegisterScreenButton() async {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => RegisterRoute()));
@@ -404,7 +425,7 @@ class _RegisterRoute extends State<RegisterRoute> {
           height: 15,
           child: Row(
             children: [
-              Text('Please Check Internet Connection'),
+              Text('Error'),
             ],
           ),
         ),
@@ -673,7 +694,7 @@ class _ChildSetup extends State<ChildSetup> {
           height: 15,
           child: Row(
             children: [
-              Text('Please Check Internet Connection'),
+              Text('Error'),
             ],
           ),
         ),
