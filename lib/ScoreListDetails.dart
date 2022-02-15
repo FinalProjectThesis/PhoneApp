@@ -17,7 +17,19 @@ class ScoreListDetails extends StatefulWidget {
   final String index;
   final String difficulty;
   final String token;
-  ScoreListDetails({Key? key, required this.parent_username, required this.student_id, required this.student_name, required this.operation, required this.id, required this.index, required this.difficulty, required this.token}) : super(key: key);
+
+  ScoreListDetails(
+      {Key? key,
+      required this.parent_username,
+      required this.student_id,
+      required this.student_name,
+      required this.operation,
+      required this.id,
+      required this.index,
+      required this.difficulty,
+      required this.token})
+      : super(key: key);
+
   @override
   _ScoreListDetails createState() => _ScoreListDetails();
 }
@@ -27,7 +39,6 @@ class _ScoreListDetails extends State<ScoreListDetails> {
   var items = [];
   var postresponse;
   List<ChartData> chartData = [];
-
 
   @override
   void initState() {
@@ -41,32 +52,33 @@ class _ScoreListDetails extends State<ScoreListDetails> {
     print("index is " + index);
     String id = widget.id;
     postresponse = await post(
-        Uri.http('uslsthesisapi.herokuapp.com', '/scorelist/' + widget.difficulty),
+        Uri.http(
+            'uslsthesisapi.herokuapp.com', '/scorelist/' + widget.difficulty),
         body: {
           'operation': widget.operation,
-          'student_id':widget.student_id,
+          'student_id': widget.student_id,
         },
-      headers: {
+        headers: {
           "token": widget.token
-      }
-        );
+        });
     RefreshScreen();
   }
-  RefreshScreen() async{
+
+  RefreshScreen() async {
     if (postresponse.statusCode == 200) {
       items = json.decode(postresponse.body);
       var itemChart = json.decode(postresponse.body);
-    setState(() {
-      print (items);
-      refresh = false;
-      _buildcontactlist(context);
-      var reversedList = new List.from(items.reversed);
-      for (Map<String, dynamic> i in reversedList){
-        chartData.add(ChartData.fromJson(i));
-      }
-      print(chartData);
-    });
-  } else{
+      setState(() {
+        print(items);
+        refresh = false;
+        _buildcontactlist(context);
+        var reversedList = new List.from(items.reversed);
+        for (Map<String, dynamic> i in reversedList) {
+          chartData.add(ChartData.fromJson(i));
+        }
+        print(chartData);
+      });
+    } else {
       setState(() {
         print("testfail");
       });
@@ -83,12 +95,12 @@ class _ScoreListDetails extends State<ScoreListDetails> {
         title: Text("Score Details"),
       ),
       //if Refresh = false then load circular progress indicator, else load _buildcontactlist widget
-      body: refresh ? Center(
-          child: CircularProgressIndicator()
-      )
+      body: refresh
+          ? Center(child: CircularProgressIndicator())
           : _buildcontactlist(context),
     );
   }
+
   /*Widget _buildemptylistmessage(BuildContext context) {
     return Scaffold(
       body: Column(
@@ -102,85 +114,96 @@ class _ScoreListDetails extends State<ScoreListDetails> {
   }*/
   Widget _buildcontactlist(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors:[Colors.purple,Colors.orange]
-            )
-        ),
-
-        child: Padding(
-          padding: const EdgeInsets.only(top: 60),
-          child: SizedBox.expand(
-            child: SingleChildScrollView(
-              child: Column(
-                verticalDirection: VerticalDirection.down,
-                children: [
-                  SizedBox(height: 30,),
-                  Container(
-                   child: Text("Student's Name : " + items[int.parse(widget.index)]["student_name"]
-                   ),
-                 ),
-                  Text("Test Taken in : " + items[int.parse(widget.index)]["date"].toString()),
-                  Container(
-                      child: Text("Time  : " + items[int.parse(widget.index)]["time"].toString())
-                  ),
-                  Container(
-                    child: Text("Student's Score: " + items[int.parse(widget.index)]["rawscore"].toString() + "/" + items[0]["totalscore"].toString())
-                  ),
-                     Container(
-                       child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                            SfCartesianChart(
-                            title: ChartTitle(text: "Scores of " + widget.student_name + ", " + "Difficulty: " + widget.difficulty),
-                            primaryXAxis: CategoryAxis(
+        body: Container(
+      decoration: const BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Colors.purple, Colors.orange])),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 60),
+        child: SizedBox.expand(
+          child: SingleChildScrollView(
+            child: Column(
+              verticalDirection: VerticalDirection.down,
+              children: [
+                SizedBox(
+                  height: 30,
+                ),
+                Container(
+                  child: Text("Student's Name : " +
+                      items[int.parse(widget.index)]["student_name"]),
+                ),
+                Text("Test Taken in : " +
+                    items[int.parse(widget.index)]["date"].toString()),
+                Container(
+                    child: Text("Time  : " +
+                        items[int.parse(widget.index)]["time"].toString())),
+                Container(
+                    child: Text("Student's Score: " +
+                        items[int.parse(widget.index)]["rawscore"].toString() +
+                        "/" +
+                        items[0]["totalscore"].toString())),
+                SizedBox(height:20),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                           color: Colors.white24,
+                           borderRadius: BorderRadius.all(
+                             Radius.circular(12.0),
+                           )
+                        ),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SfCartesianChart(
+                              title: ChartTitle(
+                                  text: "Scores of " +
+                                      widget.student_name +
+                                      ", " +
+                                      "Difficulty: " +
+                                      widget.difficulty),
+                              primaryXAxis: CategoryAxis(
                                 title: AxisTitle(
                                     text: 'Time',
                                     textStyle: TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'Roboto',
                                         fontSize: 16,
-                                        fontWeight: FontWeight.w300
-                                    )
-                                ),
-                            ),
-                            series: <ChartSeries>[
-                      // Renders line chart
-                      LineSeries<ChartData, String>(
-                          dataSource: chartData,
-                          xValueMapper: (ChartData data, _) => data.date,
-                          yValueMapper: (ChartData data, _) => data.rawscore,
-                          markerSettings: MarkerSettings(
-                            isVisible: true
-                        )
-                      )
-                  ]
-                ),
-              ]
-    ),
+                                        fontWeight: FontWeight.w300)),
+                              ),
+                              series: <ChartSeries>[
+                                // Renders line chart
+                                LineSeries<ChartData, String>(
+                                    dataSource: chartData,
+                                    xValueMapper: (ChartData data, _) =>
+                                        data.date,
+                                    yValueMapper: (ChartData data, _) =>
+                                        data.rawscore,
+                                    markerSettings:
+                                        MarkerSettings(isVisible: true))
+                              ]),
+                        ]),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
-      )
-    );
+      ),
+    ));
   }
 }
 
 class ChartData {
   ChartData(this.date, this.rawscore);
+
   final String date;
   final int rawscore;
-  factory ChartData.fromJson(Map<String, dynamic> parsedJson){
-    return ChartData(
-      parsedJson["date"],
-      parsedJson['rawscore']
-    );
+
+  factory ChartData.fromJson(Map<String, dynamic> parsedJson) {
+    return ChartData(parsedJson["date"], parsedJson['rawscore']);
   }
 }
 /*
