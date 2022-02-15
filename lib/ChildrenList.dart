@@ -96,6 +96,7 @@ class _ChildrenList extends State<ChildrenList> {
           ),
           child: Column(
             children: [
+              SizedBox(height:40),
               _items.length > 0
                   ? Expanded(
                 child: ListView.builder(

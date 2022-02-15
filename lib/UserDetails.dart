@@ -90,7 +90,6 @@ class _UserDetails extends State<UserDetails> {
                 )
             ),
             Container(
-
                 child: Text("Your First Name : " + items[0]["first_name"].toString()
                 )
             ),

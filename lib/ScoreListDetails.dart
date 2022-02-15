@@ -76,7 +76,10 @@ class _ScoreListDetails extends State<ScoreListDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         title: Text("Score Details"),
       ),
       //if Refresh = false then load circular progress indicator, else load _buildcontactlist widget
@@ -99,56 +102,71 @@ class _ScoreListDetails extends State<ScoreListDetails> {
   }*/
   Widget _buildcontactlist(BuildContext context) {
     return Scaffold(
-      body: Column(
-        verticalDirection: VerticalDirection.down,
-        children: [
-          SizedBox(height: 30,),
-         Container(
-           child: Text("Student's Name : " + items[int.parse(widget.index)]["student_name"]
-           )
-         ),
-          Container(
-            child: Text("Test Taken in : " + items[int.parse(widget.index)]["date"].toString())
-          ),
-          Container(
-              child: Text("Time  : " + items[int.parse(widget.index)]["time"].toString())
-          ),
-          Container(
-            child: Text("Student's Score: " + items[int.parse(widget.index)]["rawscore"].toString() + "/" + items[0]["totalscore"].toString())
-          ),
-             Container(
-               child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    SfCartesianChart(
-                    title: ChartTitle(text: "Scores of " + widget.student_name + ", " + "Difficulty: " + widget.difficulty),
-                    primaryXAxis: CategoryAxis(
-                        title: AxisTitle(
-                            text: 'Time',
-                            textStyle: TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'Roboto',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w300
-                            )
-                        ),
-                    ),
-                    series: <ChartSeries>[
-              // Renders line chart
-              LineSeries<ChartData, String>(
-                  dataSource: chartData,
-                  xValueMapper: (ChartData data, _) => data.date,
-                  yValueMapper: (ChartData data, _) => data.rawscore,
-                  markerSettings: MarkerSettings(
-                    isVisible: true
-                )
-              )
-          ]
+      body: Container(
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors:[Colors.purple,Colors.orange]
+            )
         ),
-      ]
+
+        child: Padding(
+          padding: const EdgeInsets.only(top: 60),
+          child: SizedBox.expand(
+            child: SingleChildScrollView(
+              child: Column(
+                verticalDirection: VerticalDirection.down,
+                children: [
+                  SizedBox(height: 30,),
+                  Container(
+                   child: Text("Student's Name : " + items[int.parse(widget.index)]["student_name"]
+                   ),
+                 ),
+                  Text("Test Taken in : " + items[int.parse(widget.index)]["date"].toString()),
+                  Container(
+                      child: Text("Time  : " + items[int.parse(widget.index)]["time"].toString())
+                  ),
+                  Container(
+                    child: Text("Student's Score: " + items[int.parse(widget.index)]["rawscore"].toString() + "/" + items[0]["totalscore"].toString())
+                  ),
+                     Container(
+                       child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                            SfCartesianChart(
+                            title: ChartTitle(text: "Scores of " + widget.student_name + ", " + "Difficulty: " + widget.difficulty),
+                            primaryXAxis: CategoryAxis(
+                                title: AxisTitle(
+                                    text: 'Time',
+                                    textStyle: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Roboto',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w300
+                                    )
+                                ),
+                            ),
+                            series: <ChartSeries>[
+                      // Renders line chart
+                      LineSeries<ChartData, String>(
+                          dataSource: chartData,
+                          xValueMapper: (ChartData data, _) => data.date,
+                          yValueMapper: (ChartData data, _) => data.rawscore,
+                          markerSettings: MarkerSettings(
+                            isVisible: true
+                        )
+                      )
+                  ]
+                ),
+              ]
     ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ],
+        ),
       )
     );
   }
