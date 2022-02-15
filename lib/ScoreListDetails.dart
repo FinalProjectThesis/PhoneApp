@@ -63,7 +63,6 @@ class _ScoreListDetails extends State<ScoreListDetails> {
         });
     RefreshScreen();
   }
-
   RefreshScreen() async {
     if (postresponse.statusCode == 200) {
       items = json.decode(postresponse.body);
