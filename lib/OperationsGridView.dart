@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:thesis_mobile_app/UserDetails.dart';
 import './ScoreList.dart';
 import 'package:http/http.dart' as http;
@@ -107,7 +108,11 @@ class _OperationsGridView extends State<OperationsGridView> {
                                       radius:40,
                                     ),
                                     SizedBox(height:10),
-                                    Text("Addition")
+                                    Text("Addition",
+                                      style: GoogleFonts.openSans(
+                                          fontWeight: FontWeight.bold
+                                      ),
+                                    )
                                   ]
                               )
                           ),
@@ -139,7 +144,11 @@ class _OperationsGridView extends State<OperationsGridView> {
                                   radius:40,
                                 ),
                                 SizedBox(height:10),
-                                Text("Subtraction")
+                                Text("Subtraction",
+                                style: GoogleFonts.openSans(
+                                    fontWeight: FontWeight.bold
+                                ),
+                                )
                               ]
                           )
                           ),
@@ -171,7 +180,11 @@ class _OperationsGridView extends State<OperationsGridView> {
                                     radius:40,
                                 ),
                                 SizedBox(height:10),
-                                Text("Addition")
+                                Text("Multiplication",
+                                  style: GoogleFonts.openSans(
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                )
                               ]
                             )
                           ),
@@ -203,7 +216,11 @@ class _OperationsGridView extends State<OperationsGridView> {
                                       radius:40,
                                     ),
                                     SizedBox(height:10),
-                                    Text("Division")
+                                    Text("Division",
+                                      style: GoogleFonts.openSans(
+                                          fontWeight: FontWeight.bold
+                                      ),
+                                    )
                                   ]
                               )
                           ),
