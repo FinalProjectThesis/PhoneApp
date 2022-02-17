@@ -7,14 +7,18 @@ import 'package:thesis_mobile_app/ChildrenList.dart';
 import 'dart:convert';
 import 'package:thesis_mobile_app/main.dart';
 
-
 class ChildrenListAdd extends StatefulWidget {
   final String parent_username;
   final String token;
-  ChildrenListAdd({Key? key, required this.parent_username, required this.token}) : super(key: key);
+
+  ChildrenListAdd(
+      {Key? key, required this.parent_username, required this.token})
+      : super(key: key);
+
   @override
   _ChildrenListAdd createState() => _ChildrenListAdd();
 }
+
 class _ChildrenListAdd extends State<ChildrenListAdd> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _childnameController, _childageController;
@@ -27,27 +31,27 @@ class _ChildrenListAdd extends State<ChildrenListAdd> {
     _childnameController = TextEditingController();
     _childageController = TextEditingController();
   }
+
   AddChild() async {
     String studentname = _childnameController.text;
     String studentage = _childageController.text;
     String parent_username = widget.parent_username;
     try {
       var postresponse = await post(
-          Uri.http('uslsthesisapi.herokuapp.com', '/childadd'), body: {
-        "student_name": studentname,
-        "student_age": studentage,
-        "parent_username": parent_username
-      },
-      headers:{
-         "token": widget.token
+        Uri.http('uslsthesisapi.herokuapp.com', '/childadd'),
+        body: {
+          "student_name": studentname,
+          "student_age": studentage,
+          "parent_username": parent_username
         },
+        headers: {"token": widget.token},
       ).timeout(const Duration(seconds: 10));
       if (postresponse.statusCode == 200) {
         var response = json.decode(postresponse.body);
         if (response == "Success") {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              backgroundColor: Colors.deepOrange,
+              backgroundColor: Colors.green,
               content: Container(
                 height: 15,
                 child: Row(
@@ -61,9 +65,10 @@ class _ChildrenListAdd extends State<ChildrenListAdd> {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => ChildrenList(parent_username: parent_username, token: widget.token),
+              builder: (BuildContext context) => ChildrenList(
+                  parent_username: parent_username, token: widget.token),
             ),
-                (route) => false,
+            (route) => false,
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -78,7 +83,7 @@ class _ChildrenListAdd extends State<ChildrenListAdd> {
             ),
           ));
           setState(() {
-            isLoading= false;
+            isLoading = false;
           });
         }
       } else {
@@ -97,7 +102,7 @@ class _ChildrenListAdd extends State<ChildrenListAdd> {
           isLoading = false;
         });
       }
-    }on TimeoutException catch(_){
+    } on TimeoutException catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.deepOrange,
         content: Container(
@@ -112,7 +117,7 @@ class _ChildrenListAdd extends State<ChildrenListAdd> {
       setState(() {
         isLoading = false;
       });
-    }on SocketException catch(_){
+    } on SocketException catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.deepOrange,
         content: Container(
@@ -129,12 +134,13 @@ class _ChildrenListAdd extends State<ChildrenListAdd> {
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        extendBodyBehindAppBar: true,
+          extendBodyBehindAppBar: true,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -143,6 +149,7 @@ class _ChildrenListAdd extends State<ChildrenListAdd> {
           body: buildRegisterScreen(context)),
     );
   }
+
   @override
   Widget buildRegisterScreen(BuildContext context) {
     return Scaffold(
@@ -152,94 +159,106 @@ class _ChildrenListAdd extends State<ChildrenListAdd> {
               gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors:[Colors.purple,Colors.orange]
-              )
-          ),
-          child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                  controller: _childnameController,
-                  keyboardType: TextInputType.name,
-                  textCapitalization: TextCapitalization.words,
-                  decoration: InputDecoration(
-                    labelText: 'Enter the Childs Name',
-                    prefixIcon: Icon(
-                      Icons.person_outline_rounded,
-                      size: 30,
+                  colors: [Colors.purple, Colors.orange])),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                          controller: _childnameController,
+                          keyboardType: TextInputType.name,
+                          textCapitalization: TextCapitalization.words,
+                          decoration: InputDecoration(
+                            labelText: 'Enter the Childs Name',
+                            prefixIcon: Icon(
+                              Icons.person_outline_rounded,
+                              size: 30,
+                            ),
+                            contentPadding: EdgeInsets.all(15),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter Your Username';
+                            }
+                          }),
                     ),
-                    contentPadding: EdgeInsets.all(15),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter Your Username';
-                    }
-                  }
-              ),
-              TextFormField(
-                  controller: _childageController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: "Enter the Childs Age",
-                    prefixIcon: Icon(
-                      Icons.tag,
-                      size: 30,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                          controller: _childageController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: "Enter the Childs Age",
+                            prefixIcon: Icon(
+                              Icons.tag,
+                              size: 30,
+                            ),
+                            contentPadding: EdgeInsets.all(15),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter Your Password';
+                            }
+                          }),
                     ),
-                    contentPadding: EdgeInsets.all(15),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter Your Password';
-                    }
-                  }),
-              SizedBox(height:30),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: OutlinedButton(
-                    style: ElevatedButton.styleFrom(
-                        primary: Colors.teal,
-                        shape: StadiumBorder(),
-                        onSurface: Colors.indigo
-                    ),
-                    child: isLoading
-                        ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(width:20, height:20, child:CircularProgressIndicator(color:Colors.white)),
-                        const SizedBox(width:24),
-                        Text("Please Wait....",
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600
-                            ))
-                      ],
-                    )
-                        :Text(
-                      'Add Student',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
+                    SizedBox(height: 30),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom:8.0),
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: OutlinedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.teal,
+                                shape: StadiumBorder(),
+                                onSurface: Colors.indigo),
+                            child: isLoading
+                                ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                              color: Colors.white)),
+                                      const SizedBox(width: 24),
+                                      Text("Please Wait....",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w600))
+                                    ],
+                                  )
+                                : Text(
+                                    'Add Student',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                            onPressed: !isLoading
+                                ? () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      AddChild();
+                                      if (isLoading == false)
+                                        return setState(() => isLoading = true);
+                                    }
+                                  }
+                                : null),
                       ),
                     ),
-                    onPressed: !isLoading ? () async {
-                      if (_formKey.currentState!.validate()) {
-                        AddChild();
-                        if (isLoading==false) return
-                          setState(() => isLoading = true);
-                      }
-                    }
-                        :null
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }
