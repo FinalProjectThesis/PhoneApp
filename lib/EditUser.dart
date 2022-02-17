@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:thesis_mobile_app/ChildrenList.dart';
@@ -21,6 +22,7 @@ class EditChild extends StatefulWidget {
 class _EditChild extends State<EditChild> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _childnameController, _childageController;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -159,8 +161,11 @@ class _EditChild extends State<EditChild> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
         appBar: AppBar(
-          title: const Text('Edit Profile of Student'),
+          backgroundColor:  Colors.transparent,
+          elevation: 0,
+          title: const Text('Edit a Student'),
           actions: <Widget>[
             IconButton(
               icon: Icon(
@@ -182,69 +187,105 @@ class _EditChild extends State<EditChild> {
   }
   @override
   Widget buildRegisterScreen(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        body: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                  controller: _childnameController,
-                  keyboardType: TextInputType.name,
-                  decoration: InputDecoration(
-                    labelText: 'Enter your First Name ',
-                    prefixIcon: Icon(
-                      Icons.phone,
-                      size: 30,
-                    ),
-                    fillColor: Colors.white,
-                    filled: true,
-                    contentPadding: EdgeInsets.all(15),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please Enter Your Child's name";
-                    }
-                  }
-              ),
-              TextFormField(
-                  controller: _childageController,
-                  keyboardType: TextInputType.name,
-                  decoration: InputDecoration(
-                    labelText: 'Enter your Last Name',
-                    prefixIcon: Icon(
-                      Icons.phone,
-                      size: 30,
-                    ),
-                    fillColor: Colors.white,
-                    filled: true,
-                    contentPadding: EdgeInsets.all(15),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please Enter your Child's last name";
-                    }
-                  }),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: ElevatedButton(
-                    child: Text(
-                      'EDIT CHILD',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration:  const BoxDecoration(
+          gradient:  LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors:[Colors.purple,Colors.orange]
+          )
+        ),
+        child: SizedBox.expand(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                      controller: _childnameController,
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                        labelText: 'Enter your First Name ',
+                        prefixIcon: Icon(
+                          Icons.person_add_alt,
+                          size: 30,
+                        ),
+                        contentPadding: EdgeInsets.all(15),
                       ),
-                    ),
-                    onPressed: () {
-                      if(_formKey.currentState!.validate()){
-                        EditChild();
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please Enter Your Child's name";
+                        }
                       }
-                    }),
-              ),
-            ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                      controller: _childageController,
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                        labelText: 'Enter your Last Name',
+                        prefixIcon: Icon(
+                          Icons.person,
+                          size: 30,
+                        ),
+                        contentPadding: EdgeInsets.all(15),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please Enter your Child's last name";
+                        }
+                      }),
+                ),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: OutlinedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.teal,
+                          shape: StadiumBorder(),
+                          onSurface: Colors.indigo
+                      ),
+                      child: isLoading
+                          ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(width:20, height:20, child:CircularProgressIndicator(color:Colors.white)),
+                          const SizedBox(width:24),
+                          Text("Please Wait....",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600
+                              ))
+                        ],
+                      )
+                          :Text(
+                        'Edit Student',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      onPressed: !isLoading ? () async {
+                        if (_formKey.currentState!.validate()) {
+                          EditChild();
+                          if (isLoading==false) return
+                            setState(() => isLoading = true);
+                        }
+                      }
+                          :null
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
