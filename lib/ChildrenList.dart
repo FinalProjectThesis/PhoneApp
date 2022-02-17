@@ -250,7 +250,7 @@ class _ChildrenList extends State<ChildrenList> {
                       shape: StadiumBorder(),
                     ),
                     child: Text(
-                      'Add A Child',
+                      'Add a Student',
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.black,
