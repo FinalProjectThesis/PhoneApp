@@ -9,7 +9,6 @@ import 'dart:convert';
 import 'package:thesis_mobile_app/ScoreList.dart';
 import 'package:thesis_mobile_app/main.dart';
 import 'package:thesis_mobile_app/EditUser.dart';
-
 class ChildrenList extends StatefulWidget {
   final String parent_username;
   final String token;
@@ -126,6 +125,7 @@ class _ChildrenList extends State<ChildrenList> {
         ],
         title: Text('My Students'),
       ),
+      floatingActionButton: buildNavigateButton(),
       //if Refresh = false then load circular progress indicator, else load _buildcontactlist widget
       body: refresh
           ? Center(child: CircularProgressIndicator())
@@ -149,74 +149,77 @@ class _ChildrenList extends State<ChildrenList> {
               SizedBox(height: 40),
               _items.length > 0
                   ? Expanded(
-                      child: ListView.builder(
-                        itemCount: _items.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            margin: EdgeInsets.all(10),
-                            child: ListTile(
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    IconButton(
-                                        icon: Icon(Icons.person),
-                                        onPressed: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => EditChild(
-                                                      parent_username: widget
-                                                          .parent_username,
-                                                      student_id: _items[index]
-                                                              ["id"]
-                                                          .toString(),
-                                                      student_name: _items[
-                                                                  index]
-                                                              ["student_name"]
-                                                          .toString(),
-                                                      student_age: _items[index]
-                                                              ["student_age"]
-                                                          .toString(),
-                                                      token:
-                                                          widget.token))).then(
-                                              (value) => setState(() {
-                                                    fetchUser();
-                                                  }));
-                                        }),
-                                  ],
-                                ),
-                                leading: CircleAvatar(
-                                    backgroundColor: Colors.primaries[Random()
-                                        .nextInt(Colors.primaries.length)],
-                                    child: Text(_items[index]['student_name']
-                                        .substring(0, 1)
-                                        .toUpperCase())),
-                                title: Text(_items[index]['student_name']),
-                                subtitle: Text("Student Age: " +
-                                    _items[index]["student_age"].toString()),
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              OperationsGridView(
-                                                parent_username:
-                                                    widget.parent_username,
-                                                student_id: _items[index]["id"]
-                                                    .toString(),
-                                                student_name: _items[index]
-                                                        ["student_name"]
-                                                    .toString(),
-                                                student_age: _items[index]
-                                                        ["student_age"]
-                                                    .toString(),
-                                                token: widget.token,
-                                              ))).then((value) => setState(() {
-                                        fetchUser();
-                                      }));
-                                }),
-                          );
-                        },
+                      child: Container(
+                        height: 6000,
+                        child: ListView.builder(
+                          itemCount: _items.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              margin: EdgeInsets.all(10),
+                              child: ListTile(
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      IconButton(
+                                          icon: Icon(Icons.person),
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => EditChild(
+                                                        parent_username: widget
+                                                            .parent_username,
+                                                        student_id: _items[index]
+                                                                ["id"]
+                                                            .toString(),
+                                                        student_name: _items[
+                                                                    index]
+                                                                ["student_name"]
+                                                            .toString(),
+                                                        student_age: _items[index]
+                                                                ["student_age"]
+                                                            .toString(),
+                                                        token:
+                                                            widget.token))).then(
+                                                (value) => setState(() {
+                                                      fetchUser();
+                                                    }));
+                                          }),
+                                    ],
+                                  ),
+                                  leading: CircleAvatar(
+                                      backgroundColor: Colors.primaries[Random()
+                                          .nextInt(Colors.primaries.length)],
+                                      child: Text(_items[index]['student_name']
+                                          .substring(0, 1)
+                                          .toUpperCase())),
+                                  title: Text(_items[index]['student_name']),
+                                  subtitle: Text("Student Age: " +
+                                      _items[index]["student_age"].toString()),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                OperationsGridView(
+                                                  parent_username:
+                                                      widget.parent_username,
+                                                  student_id: _items[index]["id"]
+                                                      .toString(),
+                                                  student_name: _items[index]
+                                                          ["student_name"]
+                                                      .toString(),
+                                                  student_age: _items[index]
+                                                          ["student_age"]
+                                                      .toString(),
+                                                  token: widget.token,
+                                                ))).then((value) => setState(() {
+                                          fetchUser();
+                                        }));
+                                  }),
+                            );
+                          },
+                        ),
                       ),
                     )
                   : Container(
@@ -241,38 +244,26 @@ class _ChildrenList extends State<ChildrenList> {
                             ),
                           )),
                     ),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: OutlinedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.teal,
-                      shape: StadiumBorder(),
-                    ),
-                    child: Text(
-                      'Add a Student',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChildrenListAdd(
-                                      parent_username: widget.parent_username,
-                                      token: widget.token)))
-                          .then((value) => setState(() {
-                                fetchUser();
-                              }));
-                    }),
-              ),
             ],
           ),
         ),
       ),
     );
   }
+  // Add Floating Button to move to the Add Contacts Screen
+  Widget buildNavigateButton()=>FloatingActionButton(
+      child: Icon(Icons.person_add_rounded),
+      onPressed: (){
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ChildrenListAdd(
+                    parent_username: widget.parent_username,
+                    token: widget.token)))
+            .then((value) => setState(() {
+          fetchUser();
+        }));
+      }
+  );
 }
+
