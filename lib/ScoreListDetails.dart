@@ -165,7 +165,7 @@ class _ScoreListDetails extends State<ScoreListDetails> {
                                       widget.difficulty),
                               primaryXAxis: CategoryAxis(
                                 title: AxisTitle(
-                                    text: 'Time',
+                                    text: 'Date',
                                     textStyle: TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'Roboto',

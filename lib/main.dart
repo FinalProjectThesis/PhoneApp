@@ -182,7 +182,6 @@ class _LoginScreen extends State<LoginScreen> {
     );
 
   }
-
   @override
   Widget buildLoginScreen(BuildContext context) {
     return Scaffold(
@@ -644,7 +643,7 @@ class _RegisterRoute extends State<RegisterRoute> {
                               ],
                             )
                                 :Text(
-                              'Login',
+                              'Register User',
                               style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.white,

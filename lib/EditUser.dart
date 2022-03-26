@@ -34,21 +34,6 @@ class _EditChild extends State<EditChild> {
   EditChild() async {
     String studentname = _childnameController.text;
     String studentage = _childageController.text;
-    if (studentname == widget.student_name){
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.deepOrange,
-            content: Container(
-              height: 15,
-              child: Row(
-                children: [
-                  Text("Please Enter a different name"),
-                ],
-              ),
-            ),
-          )
-      );
-    }else{
       var postresponse =
       await put(Uri.http(
           'uslsthesisapi.herokuapp.com', '/childedit/update/' + widget.student_id),
@@ -98,7 +83,7 @@ class _EditChild extends State<EditChild> {
             )
         );
       }
-    }
+
   }
   showConfirmDeleteDialog(BuildContext context)  {
     // set up the buttons
@@ -210,7 +195,7 @@ class _EditChild extends State<EditChild> {
                       controller: _childnameController,
                       keyboardType: TextInputType.name,
                       decoration: InputDecoration(
-                        labelText: 'Enter your First Name ',
+                        labelText: "Enter your Student's Name",
                         prefixIcon: Icon(
                           Icons.person_add_alt,
                           size: 30,
@@ -219,7 +204,7 @@ class _EditChild extends State<EditChild> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please Enter Your Child's name";
+                          return "Please Enter Your Student's Name";
                         }
                       }
                   ),
@@ -230,16 +215,16 @@ class _EditChild extends State<EditChild> {
                       controller: _childageController,
                       keyboardType: TextInputType.name,
                       decoration: InputDecoration(
-                        labelText: 'Enter your Last Name',
+                        labelText: "Edit your Student's Age",
                         prefixIcon: Icon(
-                          Icons.person,
+                          Icons.tag,
                           size: 30,
                         ),
                         contentPadding: EdgeInsets.all(15),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please Enter your Child's last name";
+                          return "Please Enter your Student's Age";
                         }
                       }),
                 ),

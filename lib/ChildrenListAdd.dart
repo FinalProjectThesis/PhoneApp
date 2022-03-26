@@ -174,7 +174,7 @@ class _ChildrenListAdd extends State<ChildrenListAdd> {
                           keyboardType: TextInputType.name,
                           textCapitalization: TextCapitalization.words,
                           decoration: InputDecoration(
-                            labelText: 'Enter the Childs Name',
+                            labelText: "Enter the Student's Name",
                             prefixIcon: Icon(
                               Icons.person_outline_rounded,
                               size: 30,
@@ -183,7 +183,7 @@ class _ChildrenListAdd extends State<ChildrenListAdd> {
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter Your Username';
+                              return "Please the Student's Name ";
                             }
                           }),
                     ),
@@ -193,7 +193,7 @@ class _ChildrenListAdd extends State<ChildrenListAdd> {
                           controller: _childageController,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            labelText: "Enter the Childs Age",
+                            labelText: "Enter the Student's Age",
                             prefixIcon: Icon(
                               Icons.tag,
                               size: 30,
@@ -202,7 +202,7 @@ class _ChildrenListAdd extends State<ChildrenListAdd> {
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter Your Password';
+                              return "Please Enter the Student's Age";
                             }
                           }),
                     ),
